@@ -18,11 +18,13 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
-
+#include <memory/paddr.h>
 static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
+//PA1
+word_t paddr_read(paddr_t addr, int len);
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -56,6 +58,11 @@ static int cmd_help(char *args);
 
 static int cmd_si(char *args);
 
+static int cmd_info(char *args);
+
+static int cmd_x(char *args);
+
+
 static struct {
   const char *name;
   const char *description;
@@ -65,6 +72,9 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Excute the program once", cmd_si},
+  { "info","display information", cmd_info},
+  { "x","scan the memory", cmd_x},
+
   /* TODO: Add more commands */
 
 };
@@ -99,6 +109,33 @@ static int cmd_si(char *args){
 	int n;
   	arg == NULL? n = 1: sscanf(arg, "%d", &n);
 	cpu_exec(n);	
+	return 0;
+}
+
+//PA1
+static int cmd_info(char *args){
+	char *arg = strtok(args, " ");
+	if (*arg == 'r'){
+		isa_reg_display();	
+	}
+	return 0;
+}
+
+//PA1
+static int cmd_x(char *args){
+	char *arg = strtok(args, " ");
+
+	int n = 0;
+	word_t ret;
+	paddr_t addr = 0;
+       	sscanf(arg, "%d", &n);
+
+	sscanf(strtok(NULL, " "), "%x", &addr);
+	for(int i = 0;i < n; i++ )
+	{
+		ret = paddr_read(addr + i * 4, 4);
+		printf("%#x\n", ret);
+	}
 	return 0;
 }
 
