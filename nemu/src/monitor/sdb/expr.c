@@ -39,6 +39,12 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+  {"\\-", '-'},		// substract
+  {"\\*", '*'},		// mul
+  {"\\/", '/'},		// div
+  {"\\(", '('},		// left bracket
+  {"\\)", ')'},		// right bracket
+  {"[0-9]+", '1'},		// number
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -62,21 +68,30 @@ void init_regex() {
   }
 }
 
+#define TOKENS_STR_LEN 32
 typedef struct token {
   int type;
-  char str[32];
+  char str[TOKENS_STR_LEN];
 } Token;
-
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
   int position = 0;
   int i;
+
+  int token_num = 0;
   regmatch_t pmatch;
 
   nr_token = 0;
-
+  //reset tokens
+  for(int i = 0; i< 32; i++){
+  	tokens[i].type = 0;
+//	strcpy(tokens[i].str,"\000");	
+	for(int k = 0; k<TOKENS_STR_LEN; k++){
+		tokens[i].str[k] = '\0';
+	}
+  }
   while (e[position] != '\0') {
     /* Try all rules one by one. */
     for (i = 0; i < NR_REGEX; i ++) {
@@ -93,11 +108,18 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
+	if( rules[i].token_type != TK_NOTYPE){
+		tokens[token_num].type = rules[i].token_type;
 
-        switch (rules[i].token_type) {
-          default: TODO();
-        }
+	        switch (rules[i].token_type) {
+		case '1':
+			assert(TOKENS_STR_LEN>=substr_len);
+			strncpy(tokens[token_num].str, substr_start, substr_len);break;
+	         default: break;//TODO();
+	        }
 
+		token_num++;
+	}
         break;
       }
     }
@@ -107,7 +129,13 @@ static bool make_token(char *e) {
       return false;
     }
   }
+  //test tokens
+  for(int k = 0;k < token_num;k++){
+	  printf("%d\t%s\n",tokens[k].type,tokens[k].str);
+  
+  }
 
+	
   return true;
 }
 
@@ -119,7 +147,6 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
-
+  //TODO();
   return 0;
 }

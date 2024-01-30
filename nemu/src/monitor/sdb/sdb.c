@@ -23,6 +23,8 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
+
+word_t expr(char *e, bool *success);
 //PA1
 word_t paddr_read(paddr_t addr, int len);
 
@@ -62,7 +64,7 @@ static int cmd_info(char *args);
 
 static int cmd_x(char *args);
 
-
+static int cmd_p(char *args);
 static struct {
   const char *name;
   const char *description;
@@ -74,6 +76,7 @@ static struct {
   { "si", "Excute the program once", cmd_si},
   { "info","display information", cmd_info},
   { "x","scan the memory", cmd_x},
+  { "p", "calculate the expression", cmd_p},
 
   /* TODO: Add more commands */
 
@@ -138,6 +141,14 @@ static int cmd_x(char *args){
 	}
 	return 0;
 }
+//PA1
+static int cmd_p(char *args){
+//	char *arg = strtok(args, " ");
+	bool success = true;
+	expr(args, &success);
+	return 0;
+}
+
 
 void sdb_set_batch_mode() {
   is_batch_mode = true;
