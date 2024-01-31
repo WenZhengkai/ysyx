@@ -19,7 +19,6 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
-
 enum {
   TK_NOTYPE = 256, TK_EQ,
 
@@ -73,6 +72,9 @@ typedef struct token {
   int type;
   char str[TOKENS_STR_LEN];
 } Token;
+
+int token_num = 0;
+
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
@@ -80,7 +82,7 @@ static bool make_token(char *e) {
   int position = 0;
   int i;
 
-  int token_num = 0;
+  token_num = 0;
   regmatch_t pmatch;
 
   nr_token = 0;
@@ -140,6 +142,8 @@ static bool make_token(char *e) {
 }
 
 
+uint32_t eval(int boex, int eoex);
+
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -148,5 +152,136 @@ word_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
+  uint32_t val = 0;
+  val = eval(0,token_num - 1);
+  printf("value is %u\n", val);
   return 0;
+}
+//PA1
+bool check_parentheses(int boex, int eoex){
+	/*To check if there is a pair of parentheses matched*/
+	if(tokens[boex].type != '(' || tokens[eoex].type != ')'){
+		return false;
+	}
+	else{
+		int pac = 0;	//parenthese counter
+		for(int pos =  boex; pos <= eoex; pos++){
+			(tokens[pos].type == '(')?pac++ : (tokens[pos].type == ')'?pac--:pac);
+			if(pac < 0){
+				/*the ')' is too much*/
+				assert(0);
+			}
+			else if(pos > boex && pos < eoex && pac == 0){
+				/*the first '(' and last ')' are not matched*/	
+				return false;
+			}
+			else if(pos == eoex ){
+				if(pac == 0)
+					return true;
+				else
+					assert(0);	// the '(' is too much
+			}
+			else{};
+		
+		}
+	}
+	assert(0);
+	return false;
+}
+//PA1
+enum{
+	PRI_PLUS = 0, PRI_MUL = 1, PRI_MAX
+};
+//PA1
+int check_pri(int type){
+	switch(type){
+		case '+' : return PRI_PLUS; break;
+		case '-' : return PRI_PLUS; break;
+		case  '*' :return PRI_MUL; break;
+		case '/':  return PRI_MUL; break;
+		default: assert(0);
+	}
+}
+
+//PA1
+bool is_operator(int type){
+	if(type == '+' 
+		|| type == '-'
+		|| type == '*'
+		|| type == '/'){
+		return true;	
+	}
+	else{
+		return false;
+	}
+}
+//PA1
+int check_main_operator(int boex, int eoex){
+	/*Find the position of main operator*/
+	int op = 0;
+	int pos_temp =0;
+	int minp = PRI_MAX;
+	for(int pos = boex; pos <= eoex; pos++){
+		if(tokens[pos].type == '('){
+			pos_temp= pos++;
+			while(check_parentheses(pos_temp, pos) ==false){
+				pos++;
+			}
+			continue;
+		}	
+		else if(is_operator(tokens[pos].type) == false){
+			continue;	
+		}
+		else if(minp < check_pri(tokens[pos].type)){
+			continue;	
+		}
+		else{
+			minp = check_pri(tokens[pos].type);
+			op = pos;
+		}
+	}
+
+	return op;
+
+}
+
+//PA1
+//calculate the expression's valuse
+uint32_t eval(int boex, int eoex){	// begin of expression, end of expression
+	if(boex > eoex){
+		// Bad expression
+		assert(0);
+	
+	}
+	else if(boex == eoex){
+		//Single token, which should be a number
+		//Return the value of the number
+		uint32_t val = 0;
+		sscanf(tokens[boex].str, "%u",&val);
+		return val;
+		
+	}
+	else if (check_parentheses(boex, eoex) == true){
+		/*The expression is surrounded by a pair of matched parentheses;
+		 * Just throw away the parentheses
+		 * */	
+		return eval(boex + 1, eoex -1);
+	}
+	else{
+		int op = check_main_operator(boex, eoex);	//main operator's position
+		uint32_t val1 = eval(boex, op -1);
+		uint32_t val2 = eval(op + 1, eoex);
+		int op_type = tokens[op].type;
+		switch(op_type){
+			case '+': return val1 + val2;
+			case '-': return val1 - val2;
+			case '*': return val1 * val2;
+			case '/': return val1 / val2;
+			default: assert(0);
+		}
+	
+	}
+	
+
+	return 0;
 }

@@ -20,4 +20,5 @@
 
 word_t expr(char *e, bool *success);
 
+uint32_t eval(int boex, int eoex);
 #endif
