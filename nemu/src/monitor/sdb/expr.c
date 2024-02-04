@@ -74,8 +74,8 @@ typedef struct token {
 } Token;
 
 int token_num = 0;
-
-static Token tokens[32] __attribute__((used)) = {};
+#define TOKENS_SIZE 1000
+static Token tokens[TOKENS_SIZE] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
@@ -87,7 +87,7 @@ static bool make_token(char *e) {
 
   nr_token = 0;
   //reset tokens
-  for(int i = 0; i< 32; i++){
+  for(int i = 0; i< TOKENS_SIZE; i++){
   	tokens[i].type = 0;
 //	strcpy(tokens[i].str,"\000");	
 	for(int k = 0; k<TOKENS_STR_LEN; k++){
@@ -101,8 +101,8 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            i, rules[i].regex, position, substr_len, substr_len, substr_start);
+       // Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+       //     i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
 
@@ -132,10 +132,10 @@ static bool make_token(char *e) {
     }
   }
   //test tokens
-  for(int k = 0;k < token_num;k++){
-	  printf("%d\t%s\n",tokens[k].type,tokens[k].str);
-  
-  }
+ // for(int k = 0;k < token_num;k++){
+ //         printf("%d\t%s\n",tokens[k].type,tokens[k].str);
+ // 
+ // }
 
 	
   return true;
@@ -154,10 +154,13 @@ word_t expr(char *e, bool *success) {
   //TODO();
   uint32_t val = 0;
   val = eval(0,token_num - 1);
-  printf("value is %u\n", val);
-  return 0;
+  //printf("value is %u\n", val);
+  return val;
 }
 //PA1
+/* Warning: must use this function restictly like make_token(), otherwise
+ * may casuse assert()
+ */
 bool check_parentheses(int boex, int eoex){
 	/*To check if there is a pair of parentheses matched*/
 	if(tokens[boex].type != '(' || tokens[eoex].type != ')'){
@@ -180,6 +183,39 @@ bool check_parentheses(int boex, int eoex){
 					return true;
 				else
 					assert(0);	// the '(' is too much
+			}
+			else{};
+		
+		}
+	}
+	assert(0);
+	return false;
+}
+/* Warning: this function is similar to check_parentheses(int boex, int eoex),without assert*/
+bool check_parentheses_no_assert(int boex, int eoex){
+	/*To check if there is a pair of parentheses matched*/
+	if(tokens[boex].type != '(' || tokens[eoex].type != ')'){
+		return false;
+	}
+	else{
+		int pac = 0;	//parenthese counter
+		for(int pos =  boex; pos <= eoex; pos++){
+			(tokens[pos].type == '(')?pac++ : (tokens[pos].type == ')'?pac--:pac);
+			if(pac < 0){
+				/*the ')' is too much*/
+				//assert(0);
+				return false;
+			}
+			else if(pos > boex && pos < eoex && pac == 0){
+				/*the first '(' and last ')' are not matched*/	
+				return false;
+			}
+			else if(pos == eoex ){
+				if(pac == 0)
+					return true;
+				else
+					//assert(0);	// the '(' is too much
+					return false;
 			}
 			else{};
 		
@@ -224,7 +260,7 @@ int check_main_operator(int boex, int eoex){
 	for(int pos = boex; pos <= eoex; pos++){
 		if(tokens[pos].type == '('){
 			pos_temp= pos++;
-			while(check_parentheses(pos_temp, pos) ==false){
+			while(check_parentheses_no_assert(pos_temp, pos) ==false){
 				pos++;
 			}
 			continue;
