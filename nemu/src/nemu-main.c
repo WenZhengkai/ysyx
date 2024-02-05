@@ -29,15 +29,8 @@ int main(int argc, char *argv[]) {
   init_monitor(argc, argv);
 #endif
 	/* test expression */
-  	//expr();
-	FILE *fp = fopen("tools/gen-expr/input","r");
+/*	FILE *fp = fopen("tools/gen-expr/input","r");
 	char buf[65536] = {};
-	//int ret = fscanf(fp,"%s",buf);
-	//if(ret == EOF) assert(0);
-
-//	char *temp_ret = fgets(buf,65536,fp);
-//	if(temp_ret == NULL) assert(0);
-//	strcpy(buf,"\0");
 	uint32_t val =0;
 	uint32_t res = 0;
 	bool success = true;
@@ -49,10 +42,8 @@ int main(int argc, char *argv[]) {
 		strcpy(buf,"\0");
 		printf("val: %u res: %u expr: %s\n\n", val,res,expr_s);
 	}
-
 	fclose(fp);
-
-
+	*/
   /* Start engine. */
   engine_start();
 

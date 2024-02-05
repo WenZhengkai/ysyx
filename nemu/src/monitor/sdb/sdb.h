@@ -17,8 +17,9 @@
 #define __SDB_H__
 
 #include <common.h>
-
 word_t expr(char *e, bool *success);
 
 uint32_t eval(int boex, int eoex);
+
+/* watchpoint */
 #endif

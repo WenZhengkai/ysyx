@@ -19,8 +19,17 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
+
+word_t paddr_read(paddr_t addr, int len);
+
+/* If you want to add a type, which is just an operator,
+ * remeber to add information in enum about priority,
+ * and in function check_pri(), 
+ * and in function eval()
+ * check if it influncts TK_DER
+ * */
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ, TK_NEQ,TK_HEX,TK_REG,TK_AND,TK_DER,
 
   /* TODO: Add more token types */
 
@@ -38,12 +47,16 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+  {"!=", TK_NEQ},	// not equal
   {"\\-", '-'},		// substract
   {"\\*", '*'},		// mul
   {"\\/", '/'},		// div
   {"\\(", '('},		// left bracket
   {"\\)", ')'},		// right bracket
-  {"[0-9]+", '1'},		// number
+  {"0x[0-9a-f]+|0X[0-9A-Z]+", TK_HEX},	// hexadecimal-number
+  {"[0-9]+", '1'},	// number
+  {"\\$[0-9a-z]+",TK_REG},	// reg name
+  {"&&", TK_AND},	// logic and
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -101,8 +114,8 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-       // Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-       //     i, rules[i].regex, position, substr_len, substr_len, substr_start);
+        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+            i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
 
@@ -115,8 +128,16 @@ static bool make_token(char *e) {
 
 	        switch (rules[i].token_type) {
 		case '1':
+		case TK_HEX:
+		
 			assert(TOKENS_STR_LEN>=substr_len);
 			strncpy(tokens[token_num].str, substr_start, substr_len);break;
+		case TK_REG:
+			assert(TOKENS_STR_LEN>=substr_len);
+			strncpy(tokens[token_num].str, substr_start + 1, substr_len - 1);break;
+
+
+
 	         default: break;//TODO();
 	        }
 
@@ -132,10 +153,10 @@ static bool make_token(char *e) {
     }
   }
   //test tokens
- // for(int k = 0;k < token_num;k++){
- //         printf("%d\t%s\n",tokens[k].type,tokens[k].str);
- // 
- // }
+  for(int k = 0;k < token_num;k++){
+          printf("%d\t%s\n",tokens[k].type,tokens[k].str);
+  
+  }
 
 	
   return true;
@@ -149,12 +170,26 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
+  else{
+    *success = true;
+  }
 
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
+  /* fine the dereference */
+	for( int i = 0; i< token_num; i++){
+		if(tokens[i].type == '*' &&
+			(i == 0 || 
+			 (tokens[i-1].type != '1' && tokens[i-1].type != ')' && 
+			  tokens[i-1].type != TK_HEX && tokens[i-1].type != TK_REG))){
+			tokens[i].type = TK_DER;	
+		}	
+	
+	}
+
   uint32_t val = 0;
   val = eval(0,token_num - 1);
-  //printf("value is %u\n", val);
+  printf("value is %u\n", val);
   return val;
 }
 //PA1
@@ -225,8 +260,9 @@ bool check_parentheses_no_assert(int boex, int eoex){
 	return false;
 }
 //PA1
+	/*priority of operators*/
 enum{
-	PRI_PLUS = 0, PRI_MUL = 1, PRI_MAX
+	PRI_MIN = 0,PRI_AND,PRI_EQ ,PRI_PLUS , PRI_MUL , PRI_DER,PRI_MAX
 };
 //PA1
 int check_pri(int type){
@@ -235,6 +271,11 @@ int check_pri(int type){
 		case '-' : return PRI_PLUS; break;
 		case  '*' :return PRI_MUL; break;
 		case '/':  return PRI_MUL; break;
+		case TK_EQ: 
+		case TK_NEQ:
+			   return PRI_EQ; break;
+		case TK_AND: return PRI_AND; break;
+		case TK_DER: return PRI_DER; break;
 		default: assert(0);
 	}
 }
@@ -244,7 +285,11 @@ bool is_operator(int type){
 	if(type == '+' 
 		|| type == '-'
 		|| type == '*'
-		|| type == '/'){
+		|| type == '/'
+		|| type == TK_EQ
+		|| type == TK_NEQ
+		|| type == TK_AND
+		|| type == TK_DER){
 		return true;	
 	}
 	else{
@@ -293,7 +338,19 @@ uint32_t eval(int boex, int eoex){	// begin of expression, end of expression
 		//Single token, which should be a number
 		//Return the value of the number
 		uint32_t val = 0;
-		sscanf(tokens[boex].str, "%u",&val);
+		switch(tokens[boex].type){
+			case '1':
+				sscanf(tokens[boex].str, "%u",&val);break;
+			case TK_HEX:
+				sscanf(tokens[boex].str, "%x",&val);break;
+			case TK_REG:
+				bool success = false;
+				val = isa_reg_str2val(tokens[boex].str, &success);
+				assert(success == true);
+				break;
+			default: assert(0);
+		
+		}
 		return val;
 		
 	}
@@ -305,14 +362,29 @@ uint32_t eval(int boex, int eoex){	// begin of expression, end of expression
 	}
 	else{
 		int op = check_main_operator(boex, eoex);	//main operator's position
-		uint32_t val1 = eval(boex, op -1);
-		uint32_t val2 = eval(op + 1, eoex);
+		uint32_t val1 = 0;
+		uint32_t val2 = 0;
+		if(tokens[op].type == TK_DER){
+			/* add conditon if have new unary operator*/
+			val2 = eval(op + 1, eoex);
+		}
+		else{
+			val1 = eval(boex, op -1);
+			val2 = eval(op + 1, eoex);
+		}
+		
 		int op_type = tokens[op].type;
 		switch(op_type){
 			case '+': return val1 + val2;
 			case '-': return val1 - val2;
 			case '*': return val1 * val2;
 			case '/': return val1 / val2;
+			case TK_EQ: return val1 == val2;
+			case TK_NEQ: return val1 != val2;
+			case TK_AND: return val1 && val2;
+			case TK_DER: 
+				/* read from guest computer memory */
+				     return paddr_read(val2, 4);
 			default: assert(0);
 		}
 	

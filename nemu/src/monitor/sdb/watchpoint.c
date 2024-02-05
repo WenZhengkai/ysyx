@@ -14,16 +14,18 @@
 ***************************************************************************************/
 
 #include "sdb.h"
-
+#include "watchpoint.h"
 #define NR_WP 32
 
-typedef struct watchpoint {
-  int NO;
-  struct watchpoint *next;
-
-  /* TODO: Add more members if necessary */
-
-} WP;
+//typedef struct watchpoint {
+//  int NO;
+//  struct watchpoint *next;
+//
+//  /* TODO: Add more members if necessary */
+//  char *exstr;
+//  uint32_t exval;
+//
+//} WP;
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
@@ -40,4 +42,88 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
+WP* new_wp(){
+	WP *wp;
+	/* release from free_*/
+	if(free_ == NULL){
+		assert(0);
+	}
+	wp = free_;
+	free_ = free_->next;
+	/* add to head*/
+	wp->next = head;
+	head = wp;
+	return wp;
+}
 
+void free_wp(WP *wp){
+	/* release from head*/
+	assert(head != NULL);	
+	if(wp == head){
+		head = head->next;
+	}
+	else{
+		WP *pre = head;
+		while(pre->next != wp){
+			assert(pre != NULL);
+			pre = pre->next;
+		}
+		pre->next = pre->next->next;
+		pre = NULL;
+	}
+	
+	/* add to free_*/ 
+	wp->next = free_;
+	free_ = wp;
+	return;
+}
+/* scan the watchpoint */
+bool scan_wp(){
+	WP *tmp = head;
+	bool success = false;
+	uint32_t val = 0;
+	bool changed = false;
+	while(tmp != NULL){
+		val = expr(tmp->exstr,&success);
+		assert(success == true);
+		if(val != tmp->exval){
+			//record the changed watchpoint
+			changed = true;	
+			printf("NO.%d changed: %u -> %u\n", tmp->NO, tmp->exval, val);	
+			//change the value of watchpoint
+			tmp->exval = val;
+		}
+		//next wathpoint
+		tmp = tmp->next;
+	}
+	return changed;
+}
+
+void wp_display( WP* tmp){
+	if(tmp == NULL){
+		printf("Num\tType\t\tWhat\n");	
+		return;
+	}
+	else if( tmp->next== NULL){
+		printf("Num\tType\t\tWhat\n");
+		printf("%d\thw watchpoint\t%s\n",tmp->NO,tmp->exstr);
+		return;
+	}
+	else{
+		wp_display(tmp->next);
+		printf("%d\thw watchpoint\t%s\n",tmp->NO,tmp->exstr);
+		return;
+	}
+
+//	printf("Num\tType\t\tWhat\n");
+//	WP* tmp = head;
+//	while(tmp != NULL){
+//		printf("%d\thw watchpoint\t%s\n",tmp->NO,tmp->exstr);
+//		tmp = tmp->next;
+//	}
+//	return;
+}
+
+WP* wp_head(){
+	return head;
+}
