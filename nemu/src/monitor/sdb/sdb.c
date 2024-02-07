@@ -33,6 +33,8 @@ word_t paddr_read(paddr_t addr, int len);
 WP* new_wp();
 void wp_display(WP* tmp);
 WP* wp_head();
+void free_wp(WP* wp);
+WP* num2wp(int n);
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -73,6 +75,8 @@ static int cmd_x(char *args);
 static int cmd_p(char *args);
 
 static int cmd_w(char *args);
+
+static int cmd_d(char *args);
 static struct {
   const char *name;
   const char *description;
@@ -86,6 +90,7 @@ static struct {
   { "x","scan the memory", cmd_x},
   { "p", "calculate the expression", cmd_p},
   { "w", "add watchpoint", cmd_w},
+  { "d", "delete watchpoints", cmd_d},
 
   /* TODO: Add more commands */
 
@@ -127,14 +132,17 @@ static int cmd_si(char *args){
 //PA1
 static int cmd_info(char *args){
 	char *arg = strtok(args, " ");
-	if (*arg == 'r'){
+	if(arg == NULL){
+		return 0;
+	}
+	else if (*arg == 'r'){
 		isa_reg_display();	
 	}
 	else if(strcmp(arg,"w")==0){
 		wp_display(wp_head());
 	}
 	else{
-		assert(0);
+		printf("Warning: no information about this command\n");
 	}
 	return 0;
 }
@@ -172,6 +180,15 @@ static int cmd_w(char *args){
 	wp->exval = expr(wp->exstr,&success);
 	assert(success == true);
 	//wp = NULL;
+	return 0;
+}
+
+//PA1
+static int cmd_d(char *args){
+	char *arg = strtok(args, " ");
+	int num = -1;
+	sscanf(arg, "%d", &num);
+	free_wp( num2wp(num));	
 	return 0;
 }
 

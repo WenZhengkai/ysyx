@@ -58,14 +58,25 @@ WP* new_wp(){
 
 void free_wp(WP *wp){
 	/* release from head*/
-	assert(head != NULL);	
-	if(wp == head){
+	if(head == NULL){
+		printf("Warning: There are no more watchpoints\n");
+		return;
+	}
+	else if(wp == NULL){
+		printf("Warning: \"NULL\" cannot be used in free_wp\n");
+		return;
+	}
+	else if(wp == head){
 		head = head->next;
 	}
 	else{
 		WP *pre = head;
 		while(pre->next != wp){
 			assert(pre != NULL);
+			if(pre == NULL){
+				printf("Warning: no such watchpoint with pointer of wp\n");
+				return;
+			}
 			pre = pre->next;
 		}
 		pre->next = pre->next->next;
@@ -126,4 +137,18 @@ void wp_display( WP* tmp){
 
 WP* wp_head(){
 	return head;
+}
+
+WP* num2wp(int n){
+	WP *tmp = head;
+	while(tmp != NULL){
+		if( tmp->NO == n ){
+			return tmp;
+		}
+		else{
+			tmp = tmp->next;
+		}
+	}
+	printf("Warning: no watchpoint of NO.%d\n",n);
+	return NULL;
 }
