@@ -64,7 +64,7 @@ uint32_t choose(uint32_t n){
 }
 static void gen_rand_expr() {
   //buf[0] = '\0';
-  switch ((strlen(buf)>8000)?0:choose(4)){
+  switch ((strlen(buf)>100)?0:choose(4)){
   	case 0: gen_num(); break;
 	case 1: gen("("); gen_rand_expr(); gen(")"); break;
 	case 2: gen(" ");gen_rand_expr();break;

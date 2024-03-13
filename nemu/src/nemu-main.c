@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 		printf("val: %u res: %u expr: %s\n\n", val,res,expr_s);
 	}
 	fclose(fp);
-	*/
+*/	
   /* Start engine. */
   engine_start();
 
