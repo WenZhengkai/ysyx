@@ -33,6 +33,38 @@ static bool g_print_step = false;
 void device_update();
 
 bool scan_wp();
+#define BUFFER_SIZE 10
+#define STRING_LENGTH 128
+typedef struct {
+	char data[BUFFER_SIZE][STRING_LENGTH];
+	int tail;
+	int head;
+	
+}ringbuf;
+ringbuf iringbuf;
+void init_ringbuf(ringbuf * iringbuf){
+	iringbuf->head = 0;
+	iringbuf->tail = 0;
+	strcpy(iringbuf->data[iringbuf->head],"empty");
+}
+
+void write_ringbuf(ringbuf *iringbuf, const char* str){
+	iringbuf->tail = (iringbuf->tail + 1)% BUFFER_SIZE;
+	strcpy(iringbuf->data[iringbuf->tail],str);
+	if(iringbuf->tail == iringbuf->head){
+		iringbuf->head = (iringbuf->head + 1)%BUFFER_SIZE;
+	}
+}
+
+void print_ringbuf(ringbuf *iringbuf){
+	printf("Ring buffer Contents:\n");
+	int i = iringbuf->head;
+	while(1){
+		printf("%s\n", iringbuf->data[i]);
+		if(i == iringbuf->tail) break;
+		i = (i+1)%BUFFER_SIZE;
+	}
+}
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
@@ -40,6 +72,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
+  write_ringbuf(&iringbuf, _this->logbuf);
 #ifdef CONFIG_WATCHPOINT
   /* scan all watchpoints */
   if(scan_wp() == true){
@@ -116,12 +149,16 @@ void cpu_exec(uint64_t n) {
     default: nemu_state.state = NEMU_RUNNING;
   }
 
-  uint64_t timer_start = get_time();
+  init_ringbuf(&iringbuf);
 
+  uint64_t timer_start = get_time();
   execute(n);
 
   uint64_t timer_end = get_time();
   g_timer += timer_end - timer_start;
+
+  if(nemu_state.halt_ret != 0)
+  print_ringbuf(&iringbuf);
 
   switch (nemu_state.state) {
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
