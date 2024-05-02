@@ -1,16 +1,13 @@
-#include <am.h>
-#include <klib.h>
-#include <klib-macros.h>
 #include <stdarg.h>
+#include "test_string.c"
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-int printf(const char *fmt, ...) {
-  panic("Not implemented");
-}
+//int printf(const char *fmt, ...) {
+//  panic("Not implemented");
+//}
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  panic("Not implemented");
 }
 int int_to_string(int num, char *buffer)
 {
@@ -76,17 +73,15 @@ int sprintf(char *out, const char *fmt, ...) {
 		}
 		fmti++;	
 	}
-	out[outi] = '\0';
+
 	va_end(ap);
 	return strlen(out);
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
-  panic("Not implemented");
 }
 
 int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
-  panic("Not implemented");
 }
 
 #endif
