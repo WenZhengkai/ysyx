@@ -37,11 +37,16 @@ enum {
 #define immJ() do { *imm = (SEXT(BITS(i, 31, 31),1)<< 20) | (BITS(i,19,12)<< 12) | (BITS(i,20,20)<< 11) | (BITS(i,30,21)<< 1);} while(0)
 #define immB() do{ *imm = (SEXT(BITS(i,31,31),1)<< 12)| (BITS(i,7,7)<<11)|(BITS(i,30,25)<<5)|(BITS(i,11,8)<<1);} while(0)
 
+//char callflag = 0;
+int ftrace_rs1 = 0;
+int ftrace_rd = 0;
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst.val;
   int rs1 = BITS(i, 19, 15);
   int rs2 = BITS(i, 24, 20);
+  ftrace_rs1 = rs1;
   *rd     = BITS(i, 11, 7);
+  ftrace_rd = *rd;
   switch (type) {
     case TYPE_I: src1R();          immI(); break;
     case TYPE_U:                   immU(); break;
@@ -52,7 +57,37 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
     case TYPE_CI: 		   immCI(); break;
   }
 }
-
+int ftrace_count = 0;
+void ftrace_call(word_t pc, word_t dnpc){
+#ifdef CONFIG_FTRACE
+	ftrace_count++;
+	printf("0x%x(count=%d):\t",pc,ftrace_count);
+	printf("call [func name]@%x\n",dnpc);
+//	if(!(dnpc==0x80000010||dnpc==0x8000005c||
+//				dnpc==0x800000a4||
+//				dnpc==0x80000108||
+//				dnpc==0x800001b0||
+//				dnpc==0x800001c8||
+//				dnpc==0x80000248||
+//				dnpc==0x80000254))
+//		printf("error\n");
+#endif
+	return;
+}
+void ftrace_ret(word_t pc, word_t dnpc){
+#ifdef CONFIG_FTRACE
+	ftrace_count--;
+	printf("0x%x(count=%d):\t",pc,ftrace_count);
+	printf("return [func name]@%x\n",dnpc);
+#endif
+	return;
+}
+void ftrace_check(word_t pc, word_t dnpc){
+#ifdef CONFIG_FTRACE
+	(ftrace_rd==0 && ftrace_rs1 == 1)?ftrace_ret(pc,dnpc):ftrace_call(pc,dnpc);
+#endif
+	return;
+}
 static int decode_exec(Decode *s) {
   int rd = 0;
   word_t src1 = 0, src2 = 0, imm = 0;
@@ -84,8 +119,8 @@ static int decode_exec(Decode *s) {
   INSTPAT("? ?????? ????? ????? 001 ???? ? 11000 11", bne  , B, s->dnpc = (src1 != src2)? s->pc + (int32_t)imm : s->dnpc);
 
 
-  INSTPAT("? ?????????? ? ???????? ????? 1101111", jal	   , J, s->dnpc = s->pc + (int32_t)imm, R(rd) = s->pc + 4);
-  INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, s->dnpc = src1 + (int32_t)imm, R(rd) = s->pc + 4);
+  INSTPAT("? ?????????? ? ???????? ????? 1101111", jal	   , J, s->dnpc = s->pc + (int32_t)imm, R(rd) = s->pc + 4,ftrace_call(s->pc,s->dnpc));
+  INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, s->dnpc = src1 + (int32_t)imm, R(rd) = s->pc + 4,ftrace_check(s->pc,s->dnpc));
 
 
   INSTPAT("??????? ????? ????? 111 ????? 00100 11", andi   , I, R(rd) = src1 & (int32_t)imm);
@@ -118,7 +153,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 101 ????? 00000 11", lhu	   , I, R(rd) = (word_t)Mr(src1 + imm, 2));
   INSTPAT("0000000 ????? ????? 001 ????? 01100 11", sll	   , R, R(rd) = ((word_t)src1)<<(src2 & 0x0000001f));	
 
-  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh   , R, R(rd) = (word_t)(((int64_t)src1 * (int64_t)src2)>>32));
+  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh   , R, R(rd) = (word_t)((((int64_t)src1) * ((int64_t)src2))>>32));
   INSTPAT("0000001 ????? ????? 111 ????? 01100 11", remu   , R, R(rd) = ((word_t)src1 % (word_t)src2));
   INSTPAT("0000001 ????? ????? 101 ????? 01100 11", divu    , R, R(rd) = ((word_t)src1 / (word_t)src2));
 
