@@ -156,11 +156,16 @@ static int cmd_x(char *args){
 	paddr_t addr = 0;
        	sscanf(arg, "%d", &n);
 
-	sscanf(strtok(NULL, " "), "%x", &addr);
+	bool success = false;
+	addr = expr(strtok(NULL, " "),&success);
+	assert(success == true);
+
+	//sscanf(strtok(NULL, " "), "%x", &addr);
 	for(int i = 0;i < n; i++ )
 	{
 		ret = paddr_read(addr + i * 4, 4);
-		printf("%#x\n", ret);
+		printf(FMT_WORD, ret);
+		printf("\n");
 	}
 	return 0;
 }
