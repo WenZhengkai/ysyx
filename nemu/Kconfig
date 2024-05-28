@@ -161,6 +161,11 @@ config MTRACE
   bool "Enable Memory Trace"
   default y
 
+config IRINGBUF
+  depends on ITRACE
+  bool "Enable  instruction ring buf"
+  default y
+
 config FTRACE
   depends on ITRACE
   bool "Enable Funtional Trace"

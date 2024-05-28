@@ -24,10 +24,22 @@ const char *regs[] = {
 };
 
 void isa_reg_display() {
+	printf("dut info:\npc\t"FMT_WORD"\n", cpu.pc);
 	for(int i=0; i < 32 ; i++)
 	{
 		printf("%s\t",regs[i]);
 		printf(FMT_WORD"\n",cpu.gpr[i]);
+	
+	}
+
+	return;
+}
+void isa_ref_reg_display(CPU_state *ref_r) {
+	printf("ref info:\npc\t"FMT_WORD"\n", ref_r->pc);
+	for(int i=0; i < 32 ; i++)
+	{
+		printf("%s\t",regs[i]);
+		printf(FMT_WORD"\n",ref_r->gpr[i]);
 	
 	}
 

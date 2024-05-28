@@ -72,8 +72,9 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
-
+#ifdef CONFIG_IRINGBUF
   write_ringbuf(&iringbuf, _this->logbuf);
+#endif
 #ifdef CONFIG_WATCHPOINT
   /* scan all watchpoints */
   if(scan_wp() == true){
@@ -149,17 +150,19 @@ void cpu_exec(uint64_t n) {
       return;
     default: nemu_state.state = NEMU_RUNNING;
   }
-
+#ifdef CONFIG_IRINGBUF
   init_ringbuf(&iringbuf);
+#endif
 
   uint64_t timer_start = get_time();
   execute(n);
 
   uint64_t timer_end = get_time();
   g_timer += timer_end - timer_start;
-
+#ifdef CONFIG_IRINGBUF
   if(nemu_state.halt_ret != 0)
   print_ringbuf(&iringbuf);
+#endif
 
   switch (nemu_state.state) {
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;

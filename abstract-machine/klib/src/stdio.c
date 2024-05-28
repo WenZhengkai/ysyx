@@ -5,12 +5,67 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+#define MAX_PRINT_SIZE 256 
+int int_to_string(int num, char *buffer);
 int printf(const char *fmt, ...) {
-  panic("Not implemented");
+  //panic("Not implemented");
+	va_list ap;
+  	char out[MAX_PRINT_SIZE]={};
+	int done;
+	va_start(ap,fmt);
+	done = vsprintf(out, fmt, ap);
+	va_end(ap);
+	int i=0;
+	while(out[i] != '\0'){
+		putch(out[i]);
+		i++;
+	}
+	return done;
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  panic("Not implemented");
+  //panic("Not implemented");
+  // to think that next code is wirtten
+//	va_start(ap, fmt);
+	int fmti = 0;
+	int outi = 0;
+	while(*(fmt + fmti)!='\0'){
+		if(fmt[fmti] == '%'){
+			fmti++;
+			switch(fmt[fmti]){
+				case 's':{
+					char *arg_str = va_arg(ap, char *);
+					int arg_str_len = strlen(arg_str);
+					strcpy(out + outi, arg_str);
+					outi+=arg_str_len;
+					break;
+					 }
+				case 'd':{
+					int arg_int = va_arg(ap, int);
+					int arg_str_len = int_to_string(arg_int, out + outi);
+					outi+=arg_str_len;
+					break;
+					 }
+				default:
+					break;	 
+			}	
+		} else{
+			out[outi] = fmt[fmti];
+			outi++;
+		}
+		fmti++;	
+		if(outi >= MAX_PRINT_SIZE - 1){
+			break;
+		}
+	}
+	if(outi >= MAX_PRINT_SIZE - 1){
+		out[MAX_PRINT_SIZE-1] = '\0';	
+	}else{
+		out[outi] = '\0';
+	}
+// to think that next code will be written
+	//va_end(ap);
+	return strlen(out);
 }
 int int_to_string(int num, char *buffer)
 {
@@ -48,37 +103,10 @@ int sprintf(char *out, const char *fmt, ...) {
 //  panic("Not implemented");
 	va_list ap;
 	va_start(ap, fmt);
-	int fmti = 0;
-	int outi = 0;
-	while(*(fmt + fmti)!='\0'){
-		if(fmt[fmti] == '%'){
-			fmti++;
-			switch(fmt[fmti]){
-				case 's':{
-					char *arg_str = va_arg(ap, char *);
-					int arg_str_len = strlen(arg_str);
-					strcpy(out + outi, arg_str);
-					outi+=arg_str_len;
-					break;
-					 }
-				case 'd':{
-					int arg_int = va_arg(ap, int);
-					int arg_str_len = int_to_string(arg_int, out + outi);
-					outi+=arg_str_len;
-					break;
-					 }
-				default:
-					break;	 
-			}	
-		} else{
-			out[outi] = fmt[fmti];
-			outi++;
-		}
-		fmti++;	
-	}
-	out[outi] = '\0';
+	int done = 0;
+	done = vsprintf(out, fmt, ap);
 	va_end(ap);
-	return strlen(out);
+	return done;
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
