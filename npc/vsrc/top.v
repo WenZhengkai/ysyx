@@ -1,14 +1,14 @@
-module top(
+module top #(DATA_WIDTH = 64)(
 	input		clk,
 	input		rst,
-	input  [31:0]	DataFromMem,
+	input  [DATA_WIDTH - 1:0]	DataFromMem,
 	input  [31:0]	inst,
-	output [31:0]	pc,
-	output [31:0]	AddrMem,
-	output [31:0]	DataToMem,
+	output [DATA_WIDTH - 1:0]	pc,
+	output [DATA_WIDTH - 1:0]	AddrMem,
+	output [DATA_WIDTH - 1:0]	DataToMem,
 	output 		MemWrite
 );
-ysyx_23060228_RV32Ecore ysyx_core(
+ysyx_23060228_RV64IMcore #(DATA_WIDTH, 32) ysyx_core(
 	.clk(clk),
 	.rst(rst),
 	.DataFromMem(DataFromMem),

@@ -27,10 +27,10 @@ int main(int argc, char** argv){
 
 	top->inst   = 0x0;
 	top->pc     = 0x80000000;
-	pmem_write(0x80000000,0x00000117);	// auipc x2, 0x0
-	pmem_write(0x80000004,0x108100e7);	// jalr x1,x2 0x80000108
-	pmem_write(0x80000108,0xfffff0b7);	// lui x1, 0xfffff000
-	pmem_write(0x8000010c,0x00100073);	// ebreak
+	pmem_write(0x80000000,0x12345137);
+	pmem_write(0x80000004,0xfffff0b7);
+	pmem_write(0x80000008,0xffc10113);
+	pmem_write(0x8000000c,0x00100073);
 
 	top->rst    = 0;
 	top->DataFromMem = 0;
@@ -38,11 +38,10 @@ int main(int argc, char** argv){
 		if((int)sc_time_stamp()%10 == 0)
 			top->clk = top->clk ? 0 : 1;
 		top->inst = pmem_read(top->pc);
-		
+		if(top->inst == 0x00100073) break;
 		top->eval();
 		tfp->dump(main_time);
 		main_time++;
-		if(top->inst == 0x00100073) break;
 	}
 	top->final();
 	tfp->close();

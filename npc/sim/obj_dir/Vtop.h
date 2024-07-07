@@ -28,11 +28,11 @@ class Vtop VL_NOT_FINAL : public VerilatedModel {
     VL_IN8(&clk,0,0);
     VL_IN8(&rst,0,0);
     VL_OUT8(&MemWrite,0,0);
-    VL_IN(&DataFromMem,31,0);
     VL_IN(&inst,31,0);
-    VL_OUT(&pc,31,0);
-    VL_OUT(&AddrMem,31,0);
-    VL_OUT(&DataToMem,31,0);
+    VL_IN64(&DataFromMem,63,0);
+    VL_OUT64(&pc,63,0);
+    VL_OUT64(&AddrMem,63,0);
+    VL_OUT64(&DataToMem,63,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.
