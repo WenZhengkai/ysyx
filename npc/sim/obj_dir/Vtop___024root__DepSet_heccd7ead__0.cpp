@@ -6,7 +6,7 @@
 
 #include "Vtop___024root.h"
 
-extern const VlUnpacked<SData/*12:0*/, 128> Vtop__ConstPool__TABLE_h7b5f0b0b_0;
+extern const VlUnpacked<SData/*12:0*/, 128> Vtop__ConstPool__TABLE_h07160f81_0;
 
 VL_INLINE_OPT void Vtop___024root___ico_sequent__TOP__0(Vtop___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
@@ -35,7 +35,7 @@ VL_INLINE_OPT void Vtop___024root___ico_sequent__TOP__0(Vtop___024root* vlSelf) 
         [(0x1fU & (vlSelf->inst >> 0x14U))];
     __Vtableidx1 = (0x7fU & vlSelf->inst);
     vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls 
-        = Vtop__ConstPool__TABLE_h7b5f0b0b_0[__Vtableidx1];
+        = Vtop__ConstPool__TABLE_h07160f81_0[__Vtableidx1];
     vlSelf->top__DOT__ysyx_core__DOT__ysyx_ALUSrc_MuxKey__DOT__i0__DOT__pair_list[1U][0U] 
         = (IData)(vlSelf->DataToMem);
     vlSelf->top__DOT__ysyx_core__DOT__ysyx_ALUSrc_MuxKey__DOT__i0__DOT__pair_list[1U][1U] 
@@ -79,40 +79,31 @@ VL_INLINE_OPT void Vtop___024root___ico_sequent__TOP__0(Vtop___024root* vlSelf) 
                  >> 1U));
     vlSelf->MemWrite = (1U & ((IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls) 
                               >> 7U));
-    vlSelf->top__DOT__ysyx_core__DOT__ImmExt = ((0U 
-                                                 == 
-                                                 (7U 
-                                                  & ((IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls) 
-                                                     >> 9U)))
+    vlSelf->top__DOT__ysyx_core__DOT__ImmExt = ((0x800U 
+                                                 & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls))
                                                  ? 
-                                                (((- (QData)((IData)(
-                                                                     (vlSelf->inst 
-                                                                      >> 0x1fU)))) 
-                                                  << 0xcU) 
-                                                 | (QData)((IData)(
-                                                                   (vlSelf->inst 
-                                                                    >> 0x14U))))
-                                                 : 
-                                                ((4U 
-                                                  == 
-                                                  (7U 
-                                                   & ((IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls) 
-                                                      >> 9U)))
-                                                  ? 
-                                                 (((- (QData)((IData)(
-                                                                      (vlSelf->inst 
-                                                                       >> 0x1fU)))) 
-                                                   << 0x20U) 
-                                                  | ((QData)((IData)(
-                                                                     (vlSelf->inst 
-                                                                      >> 0xcU))) 
-                                                     << 0xcU))
+                                                ((0x400U 
+                                                  & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls))
+                                                  ? 0ULL
                                                   : 
-                                                 ((3U 
-                                                   == 
-                                                   (7U 
-                                                    & ((IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls) 
-                                                       >> 9U)))
+                                                 ((0x200U 
+                                                   & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls))
+                                                   ? 0ULL
+                                                   : 
+                                                  (((- (QData)((IData)(
+                                                                       (vlSelf->inst 
+                                                                        >> 0x1fU)))) 
+                                                    << 0x20U) 
+                                                   | ((QData)((IData)(
+                                                                      (vlSelf->inst 
+                                                                       >> 0xcU))) 
+                                                      << 0xcU))))
+                                                 : 
+                                                ((0x400U 
+                                                  & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls))
+                                                  ? 
+                                                 ((0x200U 
+                                                   & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls))
                                                    ? 
                                                   (((- (QData)((IData)(
                                                                        (vlSelf->inst 
@@ -130,7 +121,30 @@ VL_INLINE_OPT void Vtop___024root___ico_sequent__TOP__0(Vtop___024root* vlSelf) 
                                                                             | (0x7feU 
                                                                                & (vlSelf->inst 
                                                                                 >> 0x14U))))))))
-                                                   : 0ULL)));
+                                                   : 0ULL)
+                                                  : 
+                                                 ((0x200U 
+                                                   & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls))
+                                                   ? 
+                                                  (((- (QData)((IData)(
+                                                                       (vlSelf->inst 
+                                                                        >> 0x1fU)))) 
+                                                    << 0xcU) 
+                                                   | (QData)((IData)(
+                                                                     ((0xfe0U 
+                                                                       & (vlSelf->inst 
+                                                                          >> 0x14U)) 
+                                                                      | (0x1fU 
+                                                                         & (vlSelf->inst 
+                                                                            >> 7U))))))
+                                                   : 
+                                                  (((- (QData)((IData)(
+                                                                       (vlSelf->inst 
+                                                                        >> 0x1fU)))) 
+                                                    << 0xcU) 
+                                                   | (QData)((IData)(
+                                                                     (vlSelf->inst 
+                                                                      >> 0x14U)))))));
     vlSelf->top__DOT__ysyx_core__DOT__ysyx_ALUSrc_MuxKey__DOT__i0__DOT__pair_list[0U][0U] 
         = (IData)(vlSelf->top__DOT__ysyx_core__DOT__ImmExt);
     vlSelf->top__DOT__ysyx_core__DOT__ysyx_ALUSrc_MuxKey__DOT__i0__DOT__pair_list[0U][1U] 
