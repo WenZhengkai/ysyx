@@ -38,11 +38,13 @@ int main(int argc, char** argv){
 
 	top->rst    = 0;
 	top->DataFromMem = 0;
-	sdb_stru sdb_info = {false};
+	top->clk   = 1;
+	sdb_stru sdb_info = {
+		.end = false,
+		.n = 0,
+	};
 	while(!contextp->gotFinish()&& (sc_time_stamp() < 512)){
-		if((int)sc_time_stamp()%10 == 0)
-			top->clk = top->clk ? 0 : 1;
-		/* sdb */
+			/* sdb */
 		sdb_mainloop(&sdb_info);
 
 		if(sdb_info.end == true) {
@@ -50,6 +52,14 @@ int main(int argc, char** argv){
 			break;
 		}
 		/* sdb end */
+		if((int)sc_time_stamp()%10 == 0&& sc_time_stamp() > 0) {
+			top->clk = top->clk ? 0 : 1;
+			if((int)sc_time_stamp()%20 == 0) {
+				sdb_info.n --;
+				printf("sdb_info n : %d\n",sdb_info.n);
+			}
+		}
+
 		top->inst = pmem_read(top->pc);
 		
 		top->eval();

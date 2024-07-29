@@ -6,7 +6,9 @@
 /* We use the 'readline' library to proviede more flexibility to read from strdin. */
 struct sdb_stru{
 	bool end;
+	int  n;
 };
+sdb_stru *cmd_info;
 static char* rl_gets() {
 	static char *line_read = NULL;
 	
@@ -27,20 +29,31 @@ static char* rl_gets() {
 static int cmd_q (char *args) {
 	return -1;
 }
+static int cmd_si (char *args);
 
+static int cmd_si (char *args){
+	char *arg = strtok(args, " ");
+	arg == NULL? cmd_info->n = 1 : sscanf(arg, "%d", &(cmd_info->n));
+	return 0;
+}
 static struct {
 	const char *name;
 	const char *description;
 	int (*handler) (char *);
 } cmd_table [] = {
 	{"q", "Exit NPC simulation", cmd_q},
-
+	{"si", "Exectue the program ", cmd_si},
 	/* TODO: Add more commands */
 };
 
 #define NR_CMD ARRLEN(cmd_table)
-
 void sdb_mainloop(sdb_stru *sdb_info){
+	/* jump sdb when execute*/
+	if(sdb_info->n > 0) {
+		return;
+	}
+	/* end */
+	cmd_info = sdb_info;
 	// batch_mode
 	
 	for(char *str; (str = rl_gets()) !=NULL;){
@@ -69,6 +82,9 @@ void sdb_mainloop(sdb_stru *sdb_info){
 				if(cmd_table[i].handler(args) < 0) {
 				/* TODO: state transfer*/
 					sdb_info->end = true;
+					return;
+				}
+				if(sdb_info->n > 0) {
 					return;
 				}
 				break;
