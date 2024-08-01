@@ -1,11 +1,16 @@
+#ifndef __PADDR_H__
+#define __PADDR_H__
+
 #include<stdint.h>
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
 
 #define PMEM64 1
 #ifdef PMEM64
 typedef uint64_t paddr_t;
+#define FMT_ADDR "%lx"
 #else
 typedef uint32_t paddr_t;
+#define FMT_ADDR "%x"
 #endif
 
 #define	CONFIG_MSIZE	0x8000000
@@ -38,4 +43,4 @@ void pmem_write(uint32_t addr, uint32_t Data)
 	host_write(guest_to_host(addr), Data);
 }
 
-
+#endif

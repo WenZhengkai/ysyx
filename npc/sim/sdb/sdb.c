@@ -2,11 +2,13 @@
 #include <readline/history.h>
 #include "sdb.h"
 #include "../include/macro.h"
+#include "../dpi/dpi_fun.h"
+#include "../paddr.h"
 
 /* We use the 'readline' library to proviede more flexibility to read from strdin. */
 struct sdb_stru{
-	bool end;
-	int  n;
+	bool quit;
+	uint64_t n;
 };
 sdb_stru *cmd_info;
 static char* rl_gets() {
@@ -27,13 +29,47 @@ static char* rl_gets() {
 }
 
 static int cmd_q (char *args) {
+	cmd_info->quit = true;
 	return -1;
 }
 static int cmd_si (char *args);
+static int cmd_c (char *args);
+static int cmd_r (char *args);
+static int cmd_x (char *args);
 
 static int cmd_si (char *args){
 	char *arg = strtok(args, " ");
-	arg == NULL? cmd_info->n = 1 : sscanf(arg, "%d", &(cmd_info->n));
+	arg == NULL? cmd_info->n = 1 : sscanf(arg, "%ld", &(cmd_info->n));
+	return 0;
+}
+static int cmd_c (char *args) {
+	cmd_info->n = -1;
+	return 0;
+}
+
+static int cmd_r (char *args) {
+	dump_gpr();
+	return 0;
+}
+
+static int cmd_x(char *args){
+	char *arg = strtok(args, " ");
+	int n = 0;
+	word_t ret;
+	paddr_t addr = 0;
+	sscanf(arg, "%d", &n);
+
+	sscanf(strtok(NULL, " "), FMT_ADDR , &addr);
+
+	printf("[***** scan the memory *****]\n");
+	
+	paddr_t temp_addr = addr;
+	for(int i = 0;i < n; i++){
+		ret = pmem_read(temp_addr);
+		printf("0x" FMT_ADDR ": " FMT_WORD "\n", temp_addr , ret);
+		temp_addr += 4;
+	}
+	printf("[***** scan finish *********]\n");
 	return 0;
 }
 static struct {
@@ -42,7 +78,10 @@ static struct {
 	int (*handler) (char *);
 } cmd_table [] = {
 	{"q", "Exit NPC simulation", cmd_q},
+	{"c", "continue the execution of the program", cmd_c},
 	{"si", "Exectue the program ", cmd_si},
+	{"r", "print the registers ", cmd_r},
+	{"x", "scan the memory ", cmd_x},
 	/* TODO: Add more commands */
 };
 
@@ -70,18 +109,16 @@ void sdb_mainloop(sdb_stru *sdb_info){
 		if (args >= str_end){
 			args = NULL;
 		}
-#ifdef CONFIG_DEVICE
-#endif
+	#ifdef CONFIG_DEVICE
+	#endif
 		/* test for tokens */
-		printf("cmd: %s\nargs: %s\n", cmd, args);
+		//printf("cmd: %s\nargs: %s\n", cmd, args);
 
 		int i;
 		for (i = 0; i < NR_CMD; i ++) {
 			if(strcmp(cmd, cmd_table[i].name) == 0) {
-				printf("cmd_table:%s\n",cmd);
 				if(cmd_table[i].handler(args) < 0) {
 				/* TODO: state transfer*/
-					sdb_info->end = true;
 					return;
 				}
 				if(sdb_info->n > 0) {
@@ -90,7 +127,6 @@ void sdb_mainloop(sdb_stru *sdb_info){
 				break;
 			}
 		}
-		printf("NR_CMD:%d\n",NR_CMD);
 		if (i == NR_CMD) {printf("Unknown command '%s'\n", cmd);}
 	}
 }

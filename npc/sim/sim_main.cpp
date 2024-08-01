@@ -7,11 +7,16 @@
 #include <stdint.h>
 #include "monitor.h"
 #include "sdb/sdb.h"
+#include "include/utils.h"
 
 vluint64_t main_time = 0;	//initial 
 double sc_time_stamp()
 {
 	return main_time;
+}
+static void trace_and_difftest(Vtop *top) {
+	printf("0x%016lx:\t0x%08x\n", top->pc, top->inst);	
+
 }
 int main(int argc, char** argv){
 	VerilatedContext* contextp = new VerilatedContext;
@@ -40,32 +45,38 @@ int main(int argc, char** argv){
 	top->DataFromMem = 0;
 	top->clk   = 1;
 	sdb_stru sdb_info = {
-		.end = false,
+		.quit = false,
 		.n = 0,
 	};
 	while(!contextp->gotFinish()&& (sc_time_stamp() < 512)){
-			/* sdb */
+		/* sdb */
 		sdb_mainloop(&sdb_info);
 
-		if(sdb_info.end == true) {
-			printf("end\n");
+		if(sdb_info.quit == true) {
+			printf("quit\n");
 			break;
 		}
 		/* sdb end */
+		/* clk */
 		if((int)sc_time_stamp()%10 == 0&& sc_time_stamp() > 0) {
 			top->clk = top->clk ? 0 : 1;
+			/* Execute this block once per cycle */
 			if((int)sc_time_stamp()%20 == 0) {
-				sdb_info.n --;
-				printf("sdb_info n : %d\n",sdb_info.n);
+				sdb_info.n == 0 ? 1 : sdb_info.n --;
+				trace_and_difftest(top);
+				if(top->inst == 0x00100073) break;
 			}
 		}
+		/* clk end */
 
 		top->inst = pmem_read(top->pc);
 		
 		top->eval();
 		tfp->dump(main_time);
 		main_time++;
-		if(top->inst == 0x00100073) break;
+	}
+	if(sdb_info.quit != true){
+		npc_trap(top->pc);
 	}
 	top->final();
 	tfp->close();
