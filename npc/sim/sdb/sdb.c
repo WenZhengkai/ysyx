@@ -4,13 +4,15 @@
 #include "../include/macro.h"
 #include "../dpi/dpi_fun.h"
 #include "../paddr.h"
+#include "../include/utils.h"
+#include "../include/difftest.h"
 
+extern Vtop* top;
+extern VerilatedVcdC* tfp;
+extern void cpu_exec(uint64_t n);
+
+extern NPCState npc_state;
 /* We use the 'readline' library to proviede more flexibility to read from strdin. */
-struct sdb_stru{
-	bool quit;
-	uint64_t n;
-};
-sdb_stru *cmd_info;
 static char* rl_gets() {
 	static char *line_read = NULL;
 	
@@ -29,7 +31,6 @@ static char* rl_gets() {
 }
 
 static int cmd_q (char *args) {
-	cmd_info->quit = true;
 	return -1;
 }
 static int cmd_si (char *args);
@@ -39,11 +40,13 @@ static int cmd_x (char *args);
 
 static int cmd_si (char *args){
 	char *arg = strtok(args, " ");
-	arg == NULL? cmd_info->n = 1 : sscanf(arg, "%ld", &(cmd_info->n));
+	uint64_t n ;
+	arg == NULL? n = 1:sscanf(arg, "%ld", &n);
+	cpu_exec(n);
 	return 0;
 }
 static int cmd_c (char *args) {
-	cmd_info->n = -1;
+	cpu_exec(-1);
 	return 0;
 }
 
@@ -86,13 +89,7 @@ static struct {
 };
 
 #define NR_CMD ARRLEN(cmd_table)
-void sdb_mainloop(sdb_stru *sdb_info){
-	/* jump sdb when execute*/
-	if(sdb_info->n > 0) {
-		return;
-	}
-	/* end */
-	cmd_info = sdb_info;
+void sdb_mainloop(){
 	// batch_mode
 	
 	for(char *str; (str = rl_gets()) !=NULL;){
@@ -117,11 +114,10 @@ void sdb_mainloop(sdb_stru *sdb_info){
 		int i;
 		for (i = 0; i < NR_CMD; i ++) {
 			if(strcmp(cmd, cmd_table[i].name) == 0) {
+				//printf("before cmd, npc_state: %d\n", npc_state.state);		// check the state of the simulation
 				if(cmd_table[i].handler(args) < 0) {
 				/* TODO: state transfer*/
-					return;
-				}
-				if(sdb_info->n > 0) {
+					npc_state.state = npc_state.state == NPC_STOP ? NPC_QUIT : npc_state.state;
 					return;
 				}
 				break;

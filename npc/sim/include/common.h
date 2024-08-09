@@ -14,5 +14,7 @@ typedef int32_t sword_t;
 #define FMT_WORD "0x%08x"
 #endif
 
+typedef word_t vaddr_t;
+
 
 #endif

@@ -4,7 +4,7 @@
 #include "common.h"
 
 // -----------state ------------------
-enum {NPC_RUNNING, NPC_END, NPC_QUIT};
+enum {NPC_RUNNING, NPC_STOP, NPC_END, NPC_ABORT, NPC_QUIT};
 
 typedef struct {
 	int state;
@@ -13,6 +13,16 @@ typedef struct {
 } NPCState;
 
 extern NPCState npc_state;
+
+/* isa cpu state */
+typedef struct {
+	word_t gpr[32];
+	vaddr_t pc;
+} riscv64_CPU_state;
+
+typedef riscv64_CPU_state CPU_state;
+extern CPU_state cpu;
+/* isa cpu state end*/
 
 
 

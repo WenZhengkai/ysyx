@@ -7,10 +7,10 @@
 #define PMEM64 1
 #ifdef PMEM64
 typedef uint64_t paddr_t;
-#define FMT_ADDR "%lx"
+#define FMT_ADDR "%016lx"
 #else
 typedef uint32_t paddr_t;
-#define FMT_ADDR "%x"
+#define FMT_ADDR "%08x"
 #endif
 
 #define	CONFIG_MSIZE	0x8000000
