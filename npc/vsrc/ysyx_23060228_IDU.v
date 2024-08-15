@@ -11,7 +11,8 @@ module ysyx_23060228_IDU(
 	output 		ALUSrc,
         output [2:0]	ImmSrc,
 	output		PCTarget_srca_key,
-	output 		RegWrite	
+	output 		RegWrite,
+	output	reg[7:0]Wmask
 );
 reg [12:0] controls;
 wire	Branch;
@@ -56,6 +57,21 @@ always @(*) begin
 		default: PCTarget_srca_key = 1'b0;
 	endcase
 
+end
+always @(*) begin
+// Wmask
+	if(opcode == 7'b0100011)begin
+		case(funt3)
+			3'b000: Wmask = 8'b0000_0001;	//sb
+			3'b001: Wmask = 8'b0000_0011;	//sh
+			3'b010: Wmask = 8'b0000_1111;	//sw
+			3'b011: Wmask = 8'b1111_1111;	//sd
+			default:Wmask = 8'b0000_0000;
+		endcase
+	end
+	else begin
+			Wmask = 8'b0000_0000;
+	end	
 end
 
 endmodule

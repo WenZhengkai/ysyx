@@ -1,12 +1,13 @@
 module ysyx_23060228_RV64IMcore#(DATA_WIDTH = 32, INST_WIDTH = 32)(
 	input		clk,
 	input		rst,
-	input [DATA_WIDTH - 1 :0]	DataFromMem,
+	//input [DATA_WIDTH - 1 :0]	DataFromMem,
 	input [INST_WIDTH - 1 :0]	inst,
-	output [DATA_WIDTH - 1  :0]	pc,
-	output [DATA_WIDTH - 1:0]	AddrMem,
-	output [DATA_WIDTH - 1:0]	DataToMem,
-	output 		MemWrite
+	output [DATA_WIDTH - 1  :0]	pc
+	//output [DATA_WIDTH - 1:0]	AddrMem,
+	//output [DATA_WIDTH - 1:0]	DataToMem,
+	//output [7 : 0]		Wmask,
+	//output 			MemWrite
 
 );
 wire		PCSrc;
@@ -27,9 +28,23 @@ wire [DATA_WIDTH - 1:0]	PCplus4;
 wire [DATA_WIDTH - 1:0] PCTarget_srca;
 wire			PCTarget_srca_key;
 
+wire [DATA_WIDTH -1 :0]	AddrMem;
+wire [DATA_WIDTH -1 :0]	DataToMem;
+wire			MemWrite;
+wire [DATA_WIDTH -1 :0] DataFromMem;
+wire [7:0]		Wmask;
 
 assign		AddrMem		= 	ALURes;	
 assign 		DataToMem	= 	src2;
+
+ysyx_23060228_LSU #(DATA_WIDTH)ysyx_LSU(
+	.AddrMem(AddrMem),	
+	.Wmask(Wmask),
+	.DataToMem(DataToMem),
+	.MemWrite(MemWrite),
+
+	.DataFromMem(DataFromMem)
+);
 
 ysyx_23060228_IFU #(DATA_WIDTH)ysyx_IFU(
 	.clk(clk),
@@ -54,7 +69,8 @@ ysyx_23060228_IDU ysyx_IDU(
 	.ALUSrc(ALUSrc),
 	.ImmSrc(ImmSrc),
 	.PCTarget_srca_key(PCTarget_srca_key),
-	.RegWrite(RegWrite)
+	.RegWrite(RegWrite),
+	.Wmask(Wmask)
 );
 ysyx_23060228_RegFile #(DATA_WIDTH, 5, 32)ysyx_RegFile(
 	.clk(clk),

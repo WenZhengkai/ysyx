@@ -44,7 +44,7 @@ void cpu_exec(uint64_t n) {
 		default: npc_state.state = NPC_RUNNING;
 	}
 	for(; n > 0; n--){
-		while(!contextp->gotFinish()&& (sc_time_stamp() < 512)){
+		while(!contextp->gotFinish()){
 			main_time++;	
 			/* clk */
 			if((int)sc_time_stamp()%10 == 0&& sc_time_stamp() > 0) {
@@ -115,7 +115,7 @@ int main(int argc, char** argv){
 	init_difftest(img_size);
 
 	top->rst    = 0;
-	top->DataFromMem = 0;
+	//top->DataFromMem = 0;
 	top->clk   = 1;
 	
 

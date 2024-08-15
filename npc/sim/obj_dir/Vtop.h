@@ -28,12 +28,8 @@ class Vtop VL_NOT_FINAL : public VerilatedModel {
     // propagate new values into/out from the Verilated model.
     VL_IN8(&clk,0,0);
     VL_IN8(&rst,0,0);
-    VL_OUT8(&MemWrite,0,0);
     VL_IN(&inst,31,0);
-    VL_IN64(&DataFromMem,63,0);
     VL_OUT64(&pc,63,0);
-    VL_OUT64(&AddrMem,63,0);
-    VL_OUT64(&DataToMem,63,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.
