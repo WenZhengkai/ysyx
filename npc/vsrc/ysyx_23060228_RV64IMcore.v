@@ -33,6 +33,7 @@ wire [DATA_WIDTH -1 :0]	DataToMem;
 wire			MemWrite;
 wire [DATA_WIDTH -1 :0] DataFromMem;
 wire [7:0]		Wmask;
+wire			dw;
 
 assign		AddrMem		= 	ALURes;	
 assign 		DataToMem	= 	src2;
@@ -42,6 +43,7 @@ ysyx_23060228_LSU #(DATA_WIDTH)ysyx_LSU(
 	.Wmask(Wmask),
 	.DataToMem(DataToMem),
 	.MemWrite(MemWrite),
+	.funt3_2(inst[14]),
 
 	.DataFromMem(DataFromMem)
 );
@@ -70,7 +72,8 @@ ysyx_23060228_IDU ysyx_IDU(
 	.ImmSrc(ImmSrc),
 	.PCTarget_srca_key(PCTarget_srca_key),
 	.RegWrite(RegWrite),
-	.Wmask(Wmask)
+	.Wmask(Wmask),
+	.dw(dw)
 );
 ysyx_23060228_RegFile #(DATA_WIDTH, 5, 32)ysyx_RegFile(
 	.clk(clk),
@@ -106,6 +109,7 @@ ysyx_23060228_ALU #(DATA_WIDTH) ysyx_ALU(
 	.ALUCtrl(ALUCtrl),
 	
 	.ALURes(ALURes),
+	.dw(dw),
 	.Zero(Zero)	
 );
 ysyx_23060228_MuxKey #(2,1,DATA_WIDTH) ysyx_PCTarget_srca(

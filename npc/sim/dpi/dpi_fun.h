@@ -44,11 +44,45 @@ void CPU_state_update(vaddr_t topPC) {
 	cpu.pc = topPC;
 }
 
-extern "C" void npc_pmem_read(long long raddr, long long *rdata) {
+extern "C" void npc_pmem_read(paddr_t raddr, word_t *rdata) {
   // 总是读取地址为`raddr & ~0x7ull`的8字节返回给`rdata`
+	//TODO:存在指针访问越界问题
+	//paddr_read(raddr, 4);
+	//printf("raddr: %016lx\n",raddr);
+	if(npc_in_pmem(raddr)){
+		//printf("in pmem\n");
+#ifdef CONFIG_ISA64
+		*rdata = paddr_read(raddr, 8);
+#else
+		*rdata = paddr_read(raddr, 4);
+#endif
+	}else{
+		//printf("not in pmem\n");
+	}
 }
-extern "C" void npc_pmem_write(long long waddr, long long wdata, char wmask) {
+/* npc wirte data to memory
+ * implement dpi-c in LSU.v
+  import "DPI-C" function void npc_pmem_read(input longint raddr, output longint rdata);
+  import "DPI-C" function void npc_pmem_write( input longint waddr, input longint wdata, input byte wmask);
+  
+  always @(*) begin
+          npc_pmem_read(AddrMem, DataFromMem);
+          if(MemWrite) begin
+                  npc_pmem_write(AddrMem, DataToMem, Wmask);
+          end
+  end
+*/
+extern "C" void npc_pmem_write(paddr_t waddr, word_t wdata, char wmask) {
   // 总是往地址为`waddr & ~0x7ull`的8字节按写掩码`wmask`写入`wdata`
   // `wmask`中每比特表示`wdata`中1个字节的掩码,
   // 如`wmask = 0x3`代表只写入最低2个字节, 内存中的其它字节保持不变
+  int len;
+  switch(wmask){
+ 	case -1:    len = 8;break;
+	case 0x0f:  len = 4;break;
+	case 0x3:   len = 2;break;
+	case 0x1:   len = 1;break;
+	default:    assert(0);
+  }
+  paddr_write(waddr, len, wdata);
 }

@@ -68,7 +68,7 @@ static int cmd_x(char *args){
 	
 	paddr_t temp_addr = addr;
 	for(int i = 0;i < n; i++){
-		ret = pmem_read(temp_addr);
+		ret = paddr_read(temp_addr, 4);
 		printf("0x" FMT_ADDR ": " FMT_WORD "\n", temp_addr , ret);
 		temp_addr += 4;
 	}

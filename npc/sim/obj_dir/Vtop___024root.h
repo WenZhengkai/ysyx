@@ -17,16 +17,15 @@ class Vtop___024root final : public VerilatedModule {
     VL_IN8(rst,0,0);
     CData/*2:0*/ top__DOT__ysyx_core__DOT__ALUCtrl;
     CData/*7:0*/ top__DOT__ysyx_core__DOT__Wmask;
-    CData/*1:0*/ top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__ALUop;
+    CData/*0:0*/ top__DOT__ysyx_core__DOT__dw;
+    CData/*0:0*/ top__DOT__ysyx_core__DOT__ysyx_LSU__DOT__sig;
     CData/*0:0*/ top__DOT__ysyx_core__DOT__ysyx_ALUSrc_MuxKey__DOT__i0__DOT__hit;
     CData/*0:0*/ top__DOT__ysyx_core__DOT__ysyx_PCTarget_srca__DOT__i0__DOT__hit;
     CData/*0:0*/ top__DOT__ysyx_core__DOT__ysyx_ResSrc__DOT__i0__DOT__hit;
-    CData/*6:0*/ __Vtableidx1;
     CData/*0:0*/ __Vtrigrprev__TOP__clk;
-    CData/*1:0*/ __Vtrigrprev__TOP__top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__ALUop;
-    CData/*0:0*/ __VactDidInit;
     CData/*0:0*/ __VactContinue;
     SData/*12:0*/ top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls;
+    SData/*9:0*/ __Vtableidx1;
     SData/*9:0*/ __Vtableidx2;
     VL_IN(inst,31,0);
     IData/*31:0*/ __VstlIterCount;
@@ -43,7 +42,11 @@ class Vtop___024root final : public VerilatedModule {
     QData/*63:0*/ top__DOT__ysyx_core__DOT__PCplus4;
     QData/*63:0*/ top__DOT__ysyx_core__DOT__PCTarget_srca;
     QData/*63:0*/ top__DOT__ysyx_core__DOT__DataFromMem;
+    QData/*63:0*/ top__DOT__ysyx_core__DOT__ysyx_LSU__DOT__Wmask64;
+    QData/*63:0*/ top__DOT__ysyx_core__DOT__ysyx_LSU__DOT__DPI_DataFromMem;
     QData/*63:0*/ top__DOT__ysyx_core__DOT__ysyx_ALUSrc_MuxKey__DOT__i0__DOT__lut_out;
+    QData/*63:0*/ top__DOT__ysyx_core__DOT__ysyx_ALU__DOT__adder_Res;
+    QData/*63:0*/ top__DOT__ysyx_core__DOT__ysyx_ALU__DOT__ALURes_temp;
     QData/*63:0*/ top__DOT__ysyx_core__DOT__ysyx_PCTarget_srca__DOT__i0__DOT__lut_out;
     QData/*63:0*/ top__DOT__ysyx_core__DOT__ysyx_ResSrc__DOT__i0__DOT__lut_out;
     QData/*63:0*/ __Vtask_top__DOT__ysyx_core__DOT__ysyx_LSU__DOT__npc_pmem_read__0__rdata;
@@ -57,11 +60,11 @@ class Vtop___024root final : public VerilatedModule {
     VlUnpacked<VlWide<3>/*66:0*/, 5> top__DOT__ysyx_core__DOT__ysyx_ResSrc__DOT__i0__DOT__pair_list;
     VlUnpacked<CData/*2:0*/, 5> top__DOT__ysyx_core__DOT__ysyx_ResSrc__DOT__i0__DOT__key_list;
     VlUnpacked<QData/*63:0*/, 5> top__DOT__ysyx_core__DOT__ysyx_ResSrc__DOT__i0__DOT__data_list;
-    VlUnpacked<CData/*0:0*/, 5> __Vm_traceActivity;
+    VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;
     VlTriggerVec<1> __VstlTriggered;
     VlTriggerVec<1> __VicoTriggered;
-    VlTriggerVec<2> __VactTriggered;
-    VlTriggerVec<2> __VnbaTriggered;
+    VlTriggerVec<1> __VactTriggered;
+    VlTriggerVec<1> __VnbaTriggered;
 
     // INTERNAL VARIABLES
     Vtop__Syms* const vlSymsp;

@@ -55,12 +55,14 @@ void cpu_exec(uint64_t n) {
 					print_instr(top);
 					top->eval();			// to update the pc, let npc become pc through muxplexer, but do not fetch instructions
 					CPU_state_update(top->pc);	// define in dpi.c, must execute it after top->eval(), to copy the cpu state to simulation environment
+					printf("cpu.pc:%016lx\n",cpu.pc);
 					trace_and_difftest(pc_tmp, cpu.pc);
 					break;				
 				}
 			}
 			top->eval();
-			top->inst = pmem_read(top->pc);
+			top->inst = paddr_read(top->pc, 4);
+			printf("main_time:%ld\n",main_time);
 			tfp->dump(main_time);
 		}	
 
@@ -100,10 +102,10 @@ int main(int argc, char** argv){
 	tfp->open("wave.vcd");
 
 	top->inst   = 0x0;
-	pmem_write(0x80000000,0x00000117);	// auipc x2, 0x0
-	pmem_write(0x80000004,0x108100e7);	// jalr x1,x2 0x80000108
-	pmem_write(0x80000108,0xfffff0b7);	// lui x1, 0xfffff000
-	pmem_write(0x8000010c,0x00100073);	// ebreak
+	paddr_write(0x80000000,4,0x00000117);	// auipc x2, 0x0
+	paddr_write(0x80000004,4,0x108100e7);	// jalr x1,x2 0x80000108
+	paddr_write(0x80000108,4,0xfffff0b7);	// lui x1, 0xfffff000
+	paddr_write(0x8000010c,4,0x00100073);	// ebreak
 	
 	parse_args(argc, argv);
 

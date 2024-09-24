@@ -10,6 +10,7 @@ always@(*)begin
 		3'b100:	  ImmExt = {{(DATA_WIDTH -  20){inst[31]}},inst[31:12]}<<12;		// U, auipc, lui
 		3'b011:   ImmExt = {{(DATA_WIDTH -  21){inst[31]}},inst[31],inst[19:12],inst[20],inst[30:21],1'b0};	// J, jal
 		3'b001:	  ImmExt = {{(DATA_WIDTH -  12){inst[31]}},inst[31:25],inst[11:7]};	// S, sd
+		3'b010:   ImmExt = {{(DATA_WIDTH -  13){inst[31]}},inst[31],inst[7],inst[30:25],inst[11:8],1'b0};	//B
 
 		default:  ImmExt = DATA_WIDTH'('b0);
 
