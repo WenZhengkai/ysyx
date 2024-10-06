@@ -7,7 +7,7 @@ module ysyx_23060228_IDU(
 	output 		PCSrc,
 	output [2:0] 	ResSrc,
 	output  	MemWrite,
-	output reg [2:0]	ALUCtrl,
+	output reg [4:0]	ALUCtrl,
 	output 		ALUSrc,
         output [2:0]	ImmSrc,
 	output		PCTarget_srca_key,
@@ -31,8 +31,8 @@ assign is_jalr = (opcode == 7'b1100111) & (funt3 == 3'b000);
 always @(opcode, funt3, funt7, Zero) begin
 	case(opcode)
 							//	   1 2   3 4 5   6 7  8
-		7'b0010011: controls = 13'b1_000_1_0_000_0_10_0;	//addi	I-type srai
-		7'b0011011: controls = 13'b1_000_1_0_000_0_10_0;	//addiw
+		7'b0010011: controls = 13'b1_000_1_0_000_0_10_0;	//addi	I-type srai, andi, xori
+		7'b0011011: controls = 13'b1_000_1_0_000_0_10_0;	//addiw, srliw
 		
 		7'b0010111: controls = 13'b1_100_x_0_011_0_xx_0;	//aupic
 		7'b0110111: controls = 13'b1_100_x_0_100_0_xx_0;	//lui
@@ -41,33 +41,48 @@ always @(opcode, funt3, funt7, Zero) begin
 		7'b0100011: controls = 13'b0_001_1_1_xxx_0_00_0;	//sd
 		7'b0000011: //load form memory
 		    controls = 13'b1_000_1_0_001_0_00_0;	//ld,lw,lwu,lh,lhu,lb,lbu
-		7'b1100011:begin
-			case(funt3)
-
-		    3'b001:controls = 13'b0_010_0_0_xxx_1_01_0;		//bne
-		    default:controls = 13'bx_xxx_x_x_xxx_x_xx_x;
-			endcase
-			
-		    end
-		7'b0110011: controls = 13'b1_xxx_0_0_000_0_10_0;			// R-type ALU operation, RV32I
+		7'b1100011:
+		    		controls = 13'b0_010_0_0_xxx_1_11_0;		//bne,beq, bge, blt, bgeu, bltu
+	    
+		7'b0110011: controls = 13'b1_xxx_0_0_000_0_10_0;			// R-type ALU operation, RV32I, RV64
 		7'b0111011:begin
-					controls = 13'b1_xxx_0_0_000_0_10_0;			// R-type ALU operation, RV64
+					controls = 13'b1_xxx_0_0_000_0_10_0;			// R-type ALU operation, RV64 only, subw, sllw
 		end
 		default:    controls = 13'bx_xxx_x_x_xxx_x_xx_x;
 
 	endcase
 end
 wire RtypeSub = opcode[5] & funt7[5];
+wire RtypeMul = opcode[5] & funt7[0];
+wire RtypeDiv = opcode[5] & funt7[0];
+
+wire shif_ari = funt7[5];
 		/* ALUCtrl */
 always @(*)begin
 	case(ALUop)
-		2'b00:		ALUCtrl = 3'b000;	//addition
-		2'b01:		ALUCtrl = 3'b001;	//substraction
-		default:  case(funt3)
-				3'b000: ALUCtrl =  RtypeSub? 3'b001 : 3'b000;
-				3'b101: ALUCtrl = 3'b110;
-			  default:	ALUCtrl = 3'bxxx;
+		2'b00:		ALUCtrl = 5'b00000;	//addition
+		2'b01:		ALUCtrl = 5'b00001;	//substraction
+		2'b10:  case(funt3)
+				3'b000: ALUCtrl =  RtypeMul ? 5'b01010 : (RtypeSub? 5'b00001 : 5'b00000);
+				3'b001: ALUCtrl = 5'b00010;	//sll
+				3'b100: ALUCtrl = RtypeDiv ? 5'b01011 : 5'b00101;	// div, xor
+				3'b101: ALUCtrl = shif_ari ? 5'b00111 : 5'b00110;	//sra, srl
+				3'b111: ALUCtrl = 5'b01001;	//and
+				3'b010: ALUCtrl = 5'b00011;	//slt
+				3'b011: ALUCtrl = 5'b00100;	//sltu
+				3'b110: ALUCtrl = RtypeDiv ? 5'b01100 : 5'b01000;	//rem
+			  default:	ALUCtrl = 5'bxxxxx;
 			  endcase
+		2'b11: case(funt3)
+				3'b000: ALUCtrl = 5'b00001;	//substraction, beq
+				3'b001: ALUCtrl = 5'b00001;	//substraction, bne
+				3'b100: ALUCtrl = 5'b00011;	//slt, blt
+				3'b101: ALUCtrl = 5'b00011;	//slt, bge, need reverse
+				3'b110: ALUCtrl = 5'b00100;	//sltu, bltu
+				3'b111: ALUCtrl = 5'b00100;	//sltu, bgeu, need reverse
+
+				default:	ALUCtrl = 5'bxxxxx;
+		endcase
 
 	endcase
 end
@@ -113,6 +128,10 @@ always @(*) begin
 		case(funt3)
 			3'b000: BranchHit = Zero;	//beq
 			3'b001: BranchHit = !Zero;	//bne
+			3'b100: BranchHit = Zero;	//blt
+			3'b110: BranchHit = Zero;	//bltu
+			3'b101: BranchHit = !Zero;	//bge
+			3'b111: BranchHit = !Zero;	//bgeu
 			default:BranchHit = 1'b0;
 		endcase
 	end
@@ -122,9 +141,9 @@ always @(*) begin
 end
 	/* dw:addw R-type ALU operation, RV64 */
 always @(*) begin
-	if(opcode == 7'b0111011)
+	if(opcode == 7'b0111011)		// RV64 W
 		dw = 1'b1;
-	else if(opcode == 7'b0011011)
+	else if(opcode == 7'b0011011)	// RV64 IW
 		dw = 1'b1;
 	else
 		dw = 1'b0;

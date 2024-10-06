@@ -13,7 +13,7 @@ wire		PCSrc;
 wire [31:0]	tnpc;
 wire		Zero;
 wire [1:0]	ResSrc;
-wire [2:0]	ALUCtrl;
+wire [4:0]	ALUCtrl;
 wire 		ALUSrc;
 wire [2:0]	ImmSrc;
 wire		RegWrite;

@@ -5,7 +5,7 @@ module top(
 	output		PCSrc,
 	output [1:0]	ResSrc,
 	output		MemWrite,
-	output [2:0] 	ALUCtrl,
+	output [4:0] 	ALUCtrl,
 	output		ALUSrc,
 	output [2:0]	ImmSrc,
 	output		RegWrite	

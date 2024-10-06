@@ -2,7 +2,7 @@ module top(
 	input		clk,
 	input  [31:0]	srca,
 	input  [31:0]	srcb,
-	input  [2:0]	ALUCtrl,
+	input  [4:0]	ALUCtrl,
 	output [31:0]	ALURes,
 	output		Zero 
 );
