@@ -46,7 +46,17 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 					outi+=arg_str_len;
 					break;
 					 }
+				case 'c':{
+    				// deal %c
+    				char arg_char = (char)va_arg(ap, int);
+    				out[outi] = arg_char;
+    				outi++;
+    				break;
+					}
 				default:
+				    // unknow format, output directly
+    				out[outi++] = '%';
+    				out[outi++] = fmt[fmti];
 					break;	 
 			}	
 		} else{
