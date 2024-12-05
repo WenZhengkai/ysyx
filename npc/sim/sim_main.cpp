@@ -1,3 +1,6 @@
+/**********CONFIG DEFINES*********/
+//#define CONFIG_DIFFTEST
+
 #include "Vtop.h"
 #include "verilated.h"
 #include <stdio.h>
@@ -28,7 +31,9 @@ static void print_instr(Vtop *top) {
 }
 static void trace_and_difftest(vaddr_t pc, vaddr_t npc) {
 	//printf("0x" FMT_ADDR  ":\t0x%08x\n", top->pc, top->inst);	
+#ifdef CONFIG_DIFFTEST
 	difftest_step(pc, npc);
+#endif
 
 }
 Vtop* top;
@@ -52,17 +57,17 @@ void cpu_exec(uint64_t n) {
 			/* Execute this block once per cycle */
 				if((int)sc_time_stamp()%20 == 0) {
 					pc_tmp = cpu.pc;
-					print_instr(top);
+					//print_instr(top);
 					top->eval();			// to update the pc, let npc become pc through muxplexer, but do not fetch instructions
 					CPU_state_update(top->pc);	// define in dpi.c, must execute it after top->eval(), to copy the cpu state to simulation environment
-					printf("cpu.pc:%016lx\n",cpu.pc);
+					//printf("cpu.pc:%016lx\n",cpu.pc);
 					trace_and_difftest(pc_tmp, cpu.pc);
 					break;				
 				}
 			}
 			top->eval();
 			top->inst = paddr_read(top->pc, 4);
-			printf("main_time:%ld\n",main_time);
+			//printf("main_time:%ld\n",main_time);
 			tfp->dump(main_time);
 		}	
 

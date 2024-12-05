@@ -84,5 +84,9 @@ extern "C" void npc_pmem_write(paddr_t waddr, word_t wdata, char wmask) {
 	case 0x1:   len = 1;break;
 	default:    assert(0);
   }
-  paddr_write(waddr, len, wdata);
+  if(waddr == 0xa00003f8) {
+	putc((char)wdata,stderr);
+  }else{
+	paddr_write(waddr, len, wdata);
+  }
 }
