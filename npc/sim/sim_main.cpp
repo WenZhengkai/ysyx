@@ -49,27 +49,22 @@ void cpu_exec(uint64_t n) {
 		default: npc_state.state = NPC_RUNNING;
 	}
 	for(; n > 0; n--){
-		while(!contextp->gotFinish()){
-			main_time++;	
-			/* clk */
-			if((int)sc_time_stamp()%10 == 0&& sc_time_stamp() > 0) {
-			top->clk = top->clk ? 0 : 1;
-			/* Execute this block once per cycle */
-				if((int)sc_time_stamp()%20 == 0) {
-					pc_tmp = cpu.pc;
-					//print_instr(top);
-					top->eval();			// to update the pc, let npc become pc through muxplexer, but do not fetch instructions
-					CPU_state_update(top->pc);	// define in dpi.c, must execute it after top->eval(), to copy the cpu state to simulation environment
-					//printf("cpu.pc:%016lx\n",cpu.pc);
-					trace_and_difftest(pc_tmp, cpu.pc);
-					break;				
-				}
-			}
-			top->eval();
-			top->inst = paddr_read(top->pc, 4);
-			//printf("main_time:%ld\n",main_time);
-			tfp->dump(main_time);
-		}	
+		//while(!contextp->gotFinish()){
+		pc_tmp = cpu.pc;
+
+		main_time++;
+		top->clk = 1;
+		top->eval();
+		CPU_state_update(top->pc);	// define in dpi.c, must execute it after top->eval(), to copy the cpu state to simulation environment
+		top->inst = paddr_read(top->pc, 4);
+		tfp->dump(main_time);
+
+		trace_and_difftest(pc_tmp, cpu.pc);
+		
+		main_time++;
+		top->clk = 0;
+		top->eval();
+		tfp->dump(main_time);
 
 		if(top->inst == 0x00100073){
 			npc_state.state = NPC_END;
