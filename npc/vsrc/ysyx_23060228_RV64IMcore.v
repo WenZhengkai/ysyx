@@ -2,7 +2,7 @@ module ysyx_23060228_RV64IMcore#(DATA_WIDTH = 32, INST_WIDTH = 32)(
 	input		clk,
 	input		rst,
 	//input [DATA_WIDTH - 1 :0]	DataFromMem,
-	input [INST_WIDTH - 1 :0]	inst,
+	output [INST_WIDTH - 1 :0]	inst,
 	output [DATA_WIDTH - 1  :0]	pc
 	//output [DATA_WIDTH - 1:0]	AddrMem,
 	//output [DATA_WIDTH - 1:0]	DataToMem,
@@ -55,6 +55,7 @@ ysyx_23060228_IFU #(DATA_WIDTH)ysyx_IFU(
 	.tnpc(tnpc),			//target next pc
 	.snpc(PCplus4),
 	
+	.inst(inst),
 	.pc(pc)
 
 );

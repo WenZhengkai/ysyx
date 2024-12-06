@@ -34,6 +34,18 @@ VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core__DOT__ysyx_L
     npc_pmem_write(waddr__Vcvt, wdata__Vcvt, wmask__Vcvt);
 }
 
+extern "C" void npc_inst_read(long long raddr, int* rdata);
+
+VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core__DOT__ysyx_IFU__DOT__npc_inst_read_TOP(QData/*63:0*/ raddr, IData/*31:0*/ &rdata) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core__DOT__ysyx_IFU__DOT__npc_inst_read_TOP\n"); );
+    // Body
+    long long raddr__Vcvt;
+    for (size_t raddr__Vidx = 0; raddr__Vidx < 1; ++raddr__Vidx) raddr__Vcvt = raddr;
+    int rdata__Vcvt;
+    npc_inst_read(raddr__Vcvt, &rdata__Vcvt);
+    rdata = rdata__Vcvt;
+}
+
 extern "C" void set_gpr_ptr(const svOpenArrayHandle a);
 
 VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core__DOT__ysyx_RegFile__DOT__set_gpr_ptr__Vdpioc2_TOP(const VlUnpacked<QData/*63:0*/, 32> &a) {
@@ -43,23 +55,6 @@ VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core__DOT__ysyx_R
     static const VerilatedVarProps a__Vopenprops(VLVT_UINT64, VLVD_IN, VerilatedVarProps::Packed(), 63, 0, VerilatedVarProps::Unpacked(), 1, a__Vopenprops__ulims);
     VerilatedDpiOpenVar a__Vopenarray (&a__Vopenprops, &a);
     set_gpr_ptr(&a__Vopenarray);
-}
-
-#ifdef VL_DEBUG
-VL_ATTR_COLD void Vtop___024root___dump_triggers__ico(Vtop___024root* vlSelf);
-#endif  // VL_DEBUG
-
-void Vtop___024root___eval_triggers__ico(Vtop___024root* vlSelf) {
-    if (false && vlSelf) {}  // Prevent unused
-    Vtop__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root___eval_triggers__ico\n"); );
-    // Body
-    vlSelf->__VicoTriggered.at(0U) = (0U == vlSelf->__VicoIterCount);
-#ifdef VL_DEBUG
-    if (VL_UNLIKELY(vlSymsp->_vm_contextp__->debug())) {
-        Vtop___024root___dump_triggers__ico(vlSelf);
-    }
-#endif
 }
 
 #ifdef VL_DEBUG

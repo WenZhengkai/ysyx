@@ -1,5 +1,5 @@
 /**********CONFIG DEFINES*********/
-//#define CONFIG_DIFFTEST
+#define CONFIG_DIFFTEST
 
 #include "Vtop.h"
 #include "verilated.h"
@@ -51,16 +51,17 @@ void cpu_exec(uint64_t n) {
 	for(; n > 0; n--){
 		//while(!contextp->gotFinish()){
 		pc_tmp = cpu.pc;
-
+		/* High value of clock */
 		main_time++;
 		top->clk = 1;
 		top->eval();
 		CPU_state_update(top->pc);	// define in dpi.c, must execute it after top->eval(), to copy the cpu state to simulation environment
-		top->inst = paddr_read(top->pc, 4);
+		//top->inst = paddr_read(top->pc, 4);
 		tfp->dump(main_time);
 
 		trace_and_difftest(pc_tmp, cpu.pc);
-		
+
+		/* Low value of clock */
 		main_time++;
 		top->clk = 0;
 		top->eval();

@@ -32,11 +32,12 @@ class Vtop___024root final : public VerilatedModule {
     SData/*12:0*/ top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls;
     SData/*9:0*/ __Vtableidx2;
     SData/*10:0*/ __Vtableidx3;
-    VL_IN(inst,31,0);
+    VL_OUT(inst,31,0);
+    IData/*31:0*/ top__DOT__ysyx_core__DOT__ysyx_IFU__DOT__DPI_DataFromMem;
     IData/*31:0*/ top__DOT__ysyx_core__DOT__ysyx_ALU__DOT__divw_res;
     IData/*31:0*/ top__DOT__ysyx_core__DOT__ysyx_ALU__DOT__remw_res;
+    IData/*31:0*/ __Vtask_top__DOT__ysyx_core__DOT__ysyx_IFU__DOT__npc_inst_read__2__rdata;
     IData/*31:0*/ __VstlIterCount;
-    IData/*31:0*/ __VicoIterCount;
     IData/*31:0*/ __VactIterCount;
     VL_OUT64(pc,63,0);
     QData/*63:0*/ top__DOT__ysyx_core__DOT__tnpc;
@@ -66,9 +67,8 @@ class Vtop___024root final : public VerilatedModule {
     VlUnpacked<VlWide<3>/*66:0*/, 5> top__DOT__ysyx_core__DOT__ysyx_ResSrc__DOT__i0__DOT__pair_list;
     VlUnpacked<CData/*2:0*/, 5> top__DOT__ysyx_core__DOT__ysyx_ResSrc__DOT__i0__DOT__key_list;
     VlUnpacked<QData/*63:0*/, 5> top__DOT__ysyx_core__DOT__ysyx_ResSrc__DOT__i0__DOT__data_list;
-    VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;
+    VlUnpacked<CData/*0:0*/, 2> __Vm_traceActivity;
     VlTriggerVec<1> __VstlTriggered;
-    VlTriggerVec<1> __VicoTriggered;
     VlTriggerVec<1> __VactTriggered;
     VlTriggerVec<1> __VnbaTriggered;
 

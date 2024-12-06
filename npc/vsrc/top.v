@@ -2,7 +2,7 @@ module top #(DATA_WIDTH = 64)(
 	input		clk,
 	input		rst,
 	//input  [DATA_WIDTH - 1:0]	DataFromMem,
-	input  [31:0]	inst,
+	output  [31:0]	inst,
 	output [DATA_WIDTH - 1:0]	pc
 	//output [DATA_WIDTH - 1:0]	AddrMem,
 	//output [DATA_WIDTH - 1:0]	DataToMem,

@@ -60,6 +60,15 @@ extern "C" void npc_pmem_read(paddr_t raddr, word_t *rdata) {
 		//printf("not in pmem\n");
 	}
 }
+/* IFU fetch instruction */
+extern "C" void npc_inst_read(paddr_t raddr, uint32_t *rdata) {
+	if(npc_in_pmem(raddr)){
+		//printf("in pmem\n");
+		*rdata = paddr_read(raddr, 4);
+	}else{
+		//printf("not in pmem\n");
+	}
+}
 /* npc wirte data to memory
  * implement dpi-c in LSU.v
   import "DPI-C" function void npc_pmem_read(input longint raddr, output longint rdata);

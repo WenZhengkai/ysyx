@@ -16,6 +16,8 @@ extern "C" {
 
 
     // DPI IMPORTS
+    // DPI import at ../vsrc/ysyx_23060228_IFU.v:26:30
+    extern void npc_inst_read(long long raddr, int* rdata);
     // DPI import at ../vsrc/ysyx_23060228_LSU.v:14:30
     extern void npc_pmem_read(long long raddr, long long* rdata);
     // DPI import at ../vsrc/ysyx_23060228_LSU.v:15:30
