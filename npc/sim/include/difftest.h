@@ -6,6 +6,7 @@
 //enum {DIFFTEST_TO_DUT, DIFFTEST_TO_REF};
 #ifdef CONFIG_DIFFTEST
 void difftest_step();
+void difftest_skip_ref();
 
 #else
 static inline void difftest_step() {}

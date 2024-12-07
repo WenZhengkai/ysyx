@@ -1,5 +1,5 @@
 /**********CONFIG DEFINES*********/
-//#define CONFIG_DIFFTEST
+#define CONFIG_DIFFTEST
 
 #include "Vtop.h"
 #include "verilated.h"
@@ -21,6 +21,10 @@ NPCState npc_state = {.state = NPC_STOP};
 CPU_state cpu = {};
 /* isa cpu state end*/
 
+#ifdef CONFIG_DIFFTEST
+bool skip_ref = false;
+#endif
+
 vluint64_t main_time = 0;	//initial 
 double sc_time_stamp()
 {
@@ -33,6 +37,11 @@ static void trace_and_difftest(vaddr_t pc, vaddr_t npc) {
 
 #ifdef CONFIG_DIFFTEST
 	difftest_step(pc, npc);
+	/* skip the difftest in next inst commit */
+	if(skip_ref){
+		difftest_skip_ref();
+		skip_ref =false;
+	}
 #endif
 
 }

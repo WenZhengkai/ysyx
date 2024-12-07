@@ -1,7 +1,13 @@
 #include "verilated_dpi.h"
 #include "../include/common.h"
 #include "../include/utils.h"
+#include "../include/difftest.h"
 extern CPU_state cpu;
+
+#ifdef CONFIG_DIFFTEST
+extern bool skip_ref;
+#endif
+
 word_t *cpu_gpr = NULL;
 int gprindex=0;
 extern "C" void set_gpr_ptr(const svOpenArrayHandle r) {
@@ -103,6 +109,9 @@ extern "C" void npc_pmem_write(paddr_t waddr, word_t wdata, char wmask) {
   }
   if(waddr == 0xa00003f8) {
 	putc((char)wdata,stderr);
+	#ifdef CONFIG_DIFFTEST
+	skip_ref = true;
+	#endif
   }else{
 	paddr_write(waddr, len, wdata);
   }
