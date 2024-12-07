@@ -46,6 +46,16 @@ VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core__DOT__ysyx_I
     rdata = rdata__Vcvt;
 }
 
+extern "C" void npc_nextPC_write(long long nextPC);
+
+VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core__DOT__ysyx_IFU__DOT__npc_nextPC_write_TOP(QData/*63:0*/ nextPC) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core__DOT__ysyx_IFU__DOT__npc_nextPC_write_TOP\n"); );
+    // Body
+    long long nextPC__Vcvt;
+    for (size_t nextPC__Vidx = 0; nextPC__Vidx < 1; ++nextPC__Vidx) nextPC__Vcvt = nextPC;
+    npc_nextPC_write(nextPC__Vcvt);
+}
+
 extern "C" void set_gpr_ptr(const svOpenArrayHandle a);
 
 VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core__DOT__ysyx_RegFile__DOT__set_gpr_ptr__Vdpioc2_TOP(const VlUnpacked<QData/*63:0*/, 32> &a) {

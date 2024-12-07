@@ -37,11 +37,16 @@ void npc_trap() {
 
 }
 
+extern "C" void npc_nextPC_write(paddr_t nextPC) {
+	cpu.pc = nextPC;
+}
+
 void CPU_state_update(vaddr_t topPC) {
 	for(gprindex=0; gprindex < 32; gprindex++){
 		cpu.gpr[gprindex] = cpu_gpr[gprindex];
 	}
-	cpu.pc = topPC;
+	//cpu.pc = topPC;
+	/*********** assign next PC to cpu.pc ***********/
 }
 
 extern "C" void npc_pmem_read(paddr_t raddr, word_t *rdata) {
