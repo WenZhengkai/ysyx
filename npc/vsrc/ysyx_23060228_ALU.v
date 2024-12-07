@@ -26,6 +26,7 @@ wire [DATA_WIDTH - 1: 0]and_res	= srca & srcb;
 wire [DATA_WIDTH - 1: 0]slt_res	= ($signed(srca) < $signed(srcb))? 'd1 : 'd0;
 wire [DATA_WIDTH - 1: 0]sltu_res= (srca < srcb)? 'd1 : 'd0;
 wire [DATA_WIDTH - 1: 0]mul_res = srca * srcb;
+wire [DATA_WIDTH - 1: 0] or_res = srca | srcb;
 //>>> divw >>>
 wire [DATA_WIDTH/2 - 1: 0] divw_res = $signed(srca[31:0])/$signed(srcb[31:0]);
 wire [DATA_WIDTH - 1: 0] div_res = {{32{divw_res[31]}},{divw_res[31:0]}};
@@ -45,6 +46,7 @@ always@(*)begin
 		5'b01001: ALURes_temp = and_res;				//and
 		5'b00100: ALURes_temp = sltu_res;				//sltu
 		5'b00011: ALURes_temp = slt_res;				//slt
+		5'b01000: ALURes_temp = or_res;					//or
 		5'b01010: ALURes_temp = mul_res;				//mul
 		5'b01011: ALURes_temp = div_res;				//div
 		5'b01100: ALURes_temp = rem_res;				//rem

@@ -1,5 +1,5 @@
 /**********CONFIG DEFINES*********/
-#define CONFIG_DIFFTEST
+//#define CONFIG_DIFFTEST
 
 #include "Vtop.h"
 #include "verilated.h"
@@ -57,7 +57,7 @@ void cpu_exec(uint64_t n) {
 		top->eval();
 		tfp->dump(main_time);
 
-		print_instr(top);
+		//print_instr(top);
 
 		//>>>>>> change npc sim env state >>>>>>>>>
 		if(top->inst == 0x00100073){
