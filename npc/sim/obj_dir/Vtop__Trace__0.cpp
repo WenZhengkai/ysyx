@@ -38,7 +38,9 @@ void Vtop___024root__trace_chg_sub_0(Vtop___024root* vlSelf, VerilatedVcd::Buffe
         bufp->chgCData(oldp+8,(vlSelf->top__DOT__ysyx_core__DOT__ysyx_ResSrc__DOT__i0__DOT__key_list[4]),3);
     }
     if (VL_UNLIKELY(vlSelf->__Vm_traceActivity[1U])) {
-        bufp->chgBit(oldp+9,(vlSelf->top__DOT__ysyx_core__DOT__PCSrc));
+        bufp->chgBit(oldp+9,((1U & ((((IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls) 
+                                      >> 3U) & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__BranchHit)) 
+                                    | (IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__controls)))));
         bufp->chgQData(oldp+10,(vlSelf->top__DOT__ysyx_core__DOT__tnpc),64);
         bufp->chgBit(oldp+12,(((1U == (IData)(vlSelf->top__DOT__ysyx_core__DOT__ALUCtrl))
                                 ? (0ULL == vlSelf->top__DOT__ysyx_core__DOT__ALURes)
@@ -238,9 +240,6 @@ void Vtop___024root__trace_chg_sub_0(Vtop___024root* vlSelf, VerilatedVcd::Buffe
     bufp->chgIData(oldp+218,(vlSelf->inst),32);
     bufp->chgQData(oldp+219,(vlSelf->pc),64);
     bufp->chgQData(oldp+221,((4ULL + vlSelf->pc)),64);
-    bufp->chgQData(oldp+223,(((IData)(vlSelf->top__DOT__ysyx_core__DOT__PCSrc)
-                               ? vlSelf->top__DOT__ysyx_core__DOT__tnpc
-                               : (4ULL + vlSelf->pc))),64);
     __Vtemp_h49dee185__0[0U] = (IData)(vlSelf->top__DOT__ysyx_core__DOT__src1);
     __Vtemp_h49dee185__0[1U] = (IData)((vlSelf->top__DOT__ysyx_core__DOT__src1 
                                         >> 0x20U));
@@ -254,7 +253,7 @@ void Vtop___024root__trace_chg_sub_0(Vtop___024root* vlSelf, VerilatedVcd::Buffe
     __Vtemp_h49dee185__0[4U] = ((IData)((vlSelf->pc 
                                          >> 0x20U)) 
                                 >> 0x1fU);
-    bufp->chgWData(oldp+225,(__Vtemp_h49dee185__0),130);
+    bufp->chgWData(oldp+223,(__Vtemp_h49dee185__0),130);
     __Vtemp_h4e4ad826__0[0U] = (IData)(vlSelf->top__DOT__ysyx_core__DOT__ImmExt);
     __Vtemp_h4e4ad826__0[1U] = (IData)((vlSelf->top__DOT__ysyx_core__DOT__ImmExt 
                                         >> 0x20U));
@@ -303,7 +302,7 @@ void Vtop___024root__trace_chg_sub_0(Vtop___024root* vlSelf, VerilatedVcd::Buffe
     __Vtemp_h4e4ad826__0[0xaU] = ((IData)((vlSelf->top__DOT__ysyx_core__DOT__ALURes 
                                            >> 0x20U)) 
                                   >> 0x14U);
-    bufp->chgWData(oldp+230,(__Vtemp_h4e4ad826__0),335);
+    bufp->chgWData(oldp+228,(__Vtemp_h4e4ad826__0),335);
 }
 
 void Vtop___024root__trace_cleanup(void* voidSelf, VerilatedVcd* /*unused*/) {

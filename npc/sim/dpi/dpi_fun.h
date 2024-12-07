@@ -36,17 +36,20 @@ void npc_trap() {
 	printf(" at pc = " FMT_WORD "\n", npc_state.halt_pc);
 
 }
+//>>>>>>>>> using dpi-c, get nextPC from npc >>>>>>>>>
+word_t npc_nextPC=0;
 
 extern "C" void npc_nextPC_write(paddr_t nextPC) {
-	cpu.pc = nextPC;
+	npc_nextPC = nextPC;
 }
+//<<<<<<<< using dpi-c, get nextPC from npc <<<<<<<<<<<
 
 void CPU_state_update(vaddr_t topPC) {
 	for(gprindex=0; gprindex < 32; gprindex++){
 		cpu.gpr[gprindex] = cpu_gpr[gprindex];
 	}
-	//cpu.pc = topPC;
 	/*********** assign next PC to cpu.pc ***********/
+	cpu.pc = npc_nextPC;
 }
 
 extern "C" void npc_pmem_read(paddr_t raddr, word_t *rdata) {

@@ -30,7 +30,7 @@ static void print_instr(Vtop *top) {
 	printf("0x" FMT_ADDR  ":\t0x%08x\n", top->pc, top->inst);
 }
 static void trace_and_difftest(vaddr_t pc, vaddr_t npc) {
-	//printf("0x" FMT_ADDR  ":\t0x%08x\n", top->pc, top->inst);	
+
 #ifdef CONFIG_DIFFTEST
 	difftest_step(pc, npc);
 #endif
@@ -51,22 +51,15 @@ void cpu_exec(uint64_t n) {
 	for(; n > 0; n--){
 		//while(!contextp->gotFinish()){
 		pc_tmp = cpu.pc;
-		/* High value of clock */
-		main_time++;
-		top->clk = 1;
-		top->eval();
-		CPU_state_update(top->pc);	// define in dpi.c, must execute it after top->eval(), to copy the cpu state to simulation environment
-		//top->inst = paddr_read(top->pc, 4);
-		tfp->dump(main_time);
-
-		trace_and_difftest(pc_tmp, cpu.pc);
-
 		/* Low value of clock */
 		main_time++;
 		top->clk = 0;
 		top->eval();
 		tfp->dump(main_time);
 
+		print_instr(top);
+
+		//>>>>>> change npc sim env state >>>>>>>>>
 		if(top->inst == 0x00100073){
 			npc_state.state = NPC_END;
 			npc_state.halt_ret = cpu.gpr[10];
@@ -75,6 +68,17 @@ void cpu_exec(uint64_t n) {
 			npc_state.halt_pc = pc_tmp;
 			break;
 		}
+		//<<<<< change npc sim env state <<<<<<<<<		
+
+		/* High value of clock */
+		main_time++;
+		top->clk = 1;
+		top->eval();
+		tfp->dump(main_time);
+
+		CPU_state_update(top->pc);	// define in dpi.c, must execute it after top->eval(), to copy the cpu state to simulation environment
+		trace_and_difftest(pc_tmp, cpu.pc);
+
 	}
 
 	switch (npc_state.state) {

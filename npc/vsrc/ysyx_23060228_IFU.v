@@ -17,7 +17,7 @@ always@(posedge clk) begin
 		pc <= PCSrc == 1'b0 ? snpc : tnpc;
 end
 
-/* DPI-C */
+		/* DPI-C */
 wire [31: 0]	DPI_DataFromMem;
 
 assign inst = DPI_DataFromMem;
@@ -29,4 +29,16 @@ always@(*) begin
 	npc_inst_read(pc,DPI_DataFromMem);
 end
 
+//>>>>>>> write next PC to sim env >>>>>>>
+/* longint raddr is only use in RV64 */
+import "DPI-C" function void npc_nextPC_write(input longint nextPC);
+
+wire [DATA_WIDTH - 1 :0] DPI_nextPC = pc;
+
+always@(*) begin
+	npc_nextPC_write(DPI_nextPC);
+end
+//<<<<<<< write next PC to sim env  <<<<<<
+
+		/* DPI-C end */
 endmodule
