@@ -1,4 +1,5 @@
 /**********CONFIG DEFINES*********/
+#define CONFIG_ISA64
 #define CONFIG_DIFFTEST
 //#define CONFIG_TIMER_GETTIMEOFDAY
 //#define CONFIG_TARGET_AM

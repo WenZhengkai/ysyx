@@ -2,7 +2,6 @@
 #define __COMMON_H__
 #include <stdint.h>
 
-#define CONFIG_ISA64
 
 #ifdef CONFIG_ISA64
 typedef uint64_t word_t;

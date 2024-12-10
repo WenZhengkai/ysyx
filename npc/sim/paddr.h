@@ -5,7 +5,10 @@
 #include"include/common.h"
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
 
+#ifdef CONFIG_ISA64
 #define PMEM64 1
+#endif
+
 #ifdef PMEM64
 typedef uint64_t paddr_t;
 #define FMT_ADDR "%016lx"

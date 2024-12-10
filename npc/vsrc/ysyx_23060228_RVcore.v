@@ -1,4 +1,4 @@
-module ysyx_23060228_RV64IMcore#(DATA_WIDTH = 32, INST_WIDTH = 32)(
+module ysyx_23060228_RVcore#(DATA_WIDTH = 32, INST_WIDTH = 32)(
 	input		clk,
 	input		rst,
 	//input [DATA_WIDTH - 1 :0]	DataFromMem,

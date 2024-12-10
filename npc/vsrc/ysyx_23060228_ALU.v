@@ -14,10 +14,22 @@ reg [DATA_WIDTH - 1:0]	ALURes_temp;
 assign Zero =  (ALUCtrl == 5'b00001) ? ALURes == {DATA_WIDTH{1'b0}}:
 				ALUCtrl == 5'b00011 ?  slt_res[0]:
 				ALUCtrl == 5'b00100 ?sltu_res[0]: 1'bx;	//bgeu, bltu
+`ifdef CONFIG_ISA64
 assign ALURes = dw ? {{32{ALURes_temp[31]}},{ALURes_temp[31:0]}}: ALURes_temp;
+`else
+assign ALURes = ALURes_temp;
+`endif
+
 wire [5:0] shamt = srcb[5:0];
+
+`ifdef CONFIG_ISA64
 wire [DATA_WIDTH - 1:0] shin_sra = dw ? {{32{srca[31]}},{srca[31:0]}}: srca;
 wire [DATA_WIDTH - 1:0] shin_srl = dw ? {32'b0,{srca[31:0]}}: srca;
+`else
+wire [DATA_WIDTH - 1:0] shin_sra = srca;
+wire [DATA_WIDTH - 1:0] shin_srl = srca;
+`endif
+
 wire [DATA_WIDTH - 1:0] sra_res = $signed(shin_sra)>>>shamt;
 wire [DATA_WIDTH - 1:0] srl_res = shin_srl >> shamt;
 wire [DATA_WIDTH - 1:0] sll_res = srca << shamt;
