@@ -25,7 +25,7 @@ const char *regs[] = {
 
 void isa_reg_display() {
 	printf("dut info:\npc\t"FMT_WORD"\n", cpu.pc);
-	for(int i=0; i < 32 ; i++)
+	for(int i=0; i < MUXDEF(CONFIG_RVE, 16, 32) ; i++)
 	{
 		printf("%s\t",regs[i]);
 		printf(FMT_WORD"\n",cpu.gpr[i]);
@@ -36,7 +36,7 @@ void isa_reg_display() {
 }
 void isa_ref_reg_display(CPU_state *ref_r) {
 	printf("ref info:\npc\t"FMT_WORD"\n", ref_r->pc);
-	for(int i=0; i < 32 ; i++)
+	for(int i=0; i < MUXDEF(CONFIG_RVE, 16, 32) ; i++)
 	{
 		printf("%s\t",regs[i]);
 		printf(FMT_WORD"\n",ref_r->gpr[i]);
@@ -52,7 +52,7 @@ word_t isa_reg_str2val(const char *s, bool *success) {
 		*success = true;
 		return cpu.pc;
 	}
-	for(i = 0; i < 32; i++){
+	for(i = 0; i < MUXDEF(CONFIG_RVE, 16, 32); i++){
 		if( strcmp(s , regs[i]) == 0){
 			*success = true;	
 			return cpu.gpr[i];		

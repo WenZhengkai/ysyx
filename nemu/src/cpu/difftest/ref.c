@@ -17,7 +17,7 @@
 #include <cpu/cpu.h>
 #include <difftest-def.h>
 #include <memory/paddr.h>
-#define NR_GPR 32
+#define NR_GPR MUXDEF(CONFIG_RVE, 16, 32)
 struct diff_context_t {
 	word_t gpr[32];
 	vaddr_t pc;
