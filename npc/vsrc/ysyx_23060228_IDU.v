@@ -57,6 +57,7 @@ wire RtypeMul = opcode[5] & funt7[0];
 wire RtypeDiv = opcode[5] & funt7[0];
 
 wire shif_ari = funt7[5];
+wire divu = funt7[0];
 		/* ALUCtrl */
 always @(*)begin
 	case(ALUop)
@@ -66,7 +67,7 @@ always @(*)begin
 				3'b000: ALUCtrl =  RtypeMul ? 5'b01010 : (RtypeSub? 5'b00001 : 5'b00000);
 				3'b001: ALUCtrl = 5'b00010;	//sll
 				3'b100: ALUCtrl = RtypeDiv ? 5'b01011 : 5'b00101;	// div, xor
-				3'b101: ALUCtrl = shif_ari ? 5'b00111 : 5'b00110;	//sra, srl
+				3'b101: ALUCtrl = divu && (opcode == 7'b0110011) ? 5'b01101 :(shif_ari ? 5'b00111 : 5'b00110);	//divu, sra, srl
 				3'b111: ALUCtrl = 5'b01001;	//and
 				3'b010: ALUCtrl = 5'b00011;	//slt
 				3'b011: ALUCtrl = 5'b00100;	//sltu

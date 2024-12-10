@@ -35,6 +35,8 @@ wire [DATA_WIDTH - 1: 0] div_res = {{32{divw_res[31]}},{divw_res[31:0]}};
 wire [DATA_WIDTH/2 - 1: 0] remw_res = $signed(srca[31:0])% $signed(srcb[31:0]);
 wire [DATA_WIDTH - 1: 0] rem_res = {{32{remw_res[31]}},{remw_res[31:0]}};
 //<<< remw <<<
+wire [DATA_WIDTH - 1: 0] divu_res = $unsigned(srca)/$unsigned(srcb);
+
 always@(*)begin
 	case(ALUCtrl)
 		5'b00000:	ALURes_temp = adder_Res;
@@ -48,8 +50,9 @@ always@(*)begin
 		5'b00011: ALURes_temp = slt_res;				//slt
 		5'b01000: ALURes_temp = or_res;					//or
 		5'b01010: ALURes_temp = mul_res;				//mul
-		5'b01011: ALURes_temp = div_res;				//div
+		5'b01011: ALURes_temp = div_res;				//divw, //TODO: IT is divw
 		5'b01100: ALURes_temp = rem_res;				//rem
+		5'b01101: ALURes_temp = divu_res;				//divu
 		default:ALURes_temp = {DATA_WIDTH{1'b0}};
 	endcase
 

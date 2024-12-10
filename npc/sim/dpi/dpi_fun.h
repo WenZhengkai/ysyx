@@ -2,6 +2,7 @@
 #include "../include/common.h"
 #include "../include/utils.h"
 #include "../include/difftest.h"
+#include "../utils/timer.c"
 extern CPU_state cpu;
 
 #ifdef CONFIG_DIFFTEST
@@ -70,6 +71,17 @@ extern "C" void npc_pmem_read(paddr_t raddr, word_t *rdata) {
 #else
 		*rdata = paddr_read(raddr, 4);
 #endif
+	}else if(raddr == 0xa0000048){		// RTC_ADDR=0xa0000048
+		*rdata = get_time() & 0x00000000ffffffff;
+		#ifdef CONFIG_DIFFTEST
+		skip_ref = true;
+		#endif
+	}
+	else if(raddr == 0xa000004c){
+		*rdata = get_time() >> 32;
+		#ifdef CONFIG_DIFFTEST
+		skip_ref = true;
+		#endif
 	}else{
 		//printf("not in pmem\n");
 	}
@@ -107,7 +119,7 @@ extern "C" void npc_pmem_write(paddr_t waddr, word_t wdata, char wmask) {
 	case 0x1:   len = 1;break;
 	default:    assert(0);
   }
-  if(waddr == 0xa00003f8) {
+  if(waddr == 0xa00003f8) {	//SERIAL_PORT=0xa00003f8
 	putc((char)wdata,stderr);
 	#ifdef CONFIG_DIFFTEST
 	skip_ref = true;

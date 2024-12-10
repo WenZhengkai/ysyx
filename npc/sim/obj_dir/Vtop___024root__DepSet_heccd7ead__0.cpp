@@ -224,10 +224,17 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
                                                     ((0x1000U 
                                                       & vlSelf->top__DOT__ysyx_core__DOT__ysyx_IFU__DOT__DPI_DataFromMem)
                                                       ? 
-                                                     ((0x40000000U 
-                                                       & vlSelf->top__DOT__ysyx_core__DOT__ysyx_IFU__DOT__DPI_DataFromMem)
-                                                       ? 7U
-                                                       : 6U)
+                                                     ((IData)(
+                                                              (0x2000033U 
+                                                               == 
+                                                               (0x200007fU 
+                                                                & vlSelf->top__DOT__ysyx_core__DOT__ysyx_IFU__DOT__DPI_DataFromMem)))
+                                                       ? 0xdU
+                                                       : 
+                                                      ((0x40000000U 
+                                                        & vlSelf->top__DOT__ysyx_core__DOT__ysyx_IFU__DOT__DPI_DataFromMem)
+                                                        ? 7U
+                                                        : 6U))
                                                       : 
                                                      ((IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_IDU__DOT__RtypeMul)
                                                        ? 0xbU
@@ -408,13 +415,13 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
                        ? ((4U & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ALUCtrl))
                            ? ((2U & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ALUCtrl))
                                ? 0ULL : ((1U & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ALUCtrl))
-                                          ? 0ULL : 
-                                         (((QData)((IData)(
-                                                           (- (IData)(
-                                                                      (vlSelf->top__DOT__ysyx_core__DOT__ysyx_ALU__DOT__remw_res 
-                                                                       >> 0x1fU))))) 
-                                           << 0x20U) 
-                                          | (QData)((IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_ALU__DOT__remw_res)))))
+                                          ? VL_DIV_QQQ(64, vlSelf->top__DOT__ysyx_core__DOT__src1, vlSelf->top__DOT__ysyx_core__DOT__srcb)
+                                          : (((QData)((IData)(
+                                                              (- (IData)(
+                                                                         (vlSelf->top__DOT__ysyx_core__DOT__ysyx_ALU__DOT__remw_res 
+                                                                          >> 0x1fU))))) 
+                                              << 0x20U) 
+                                             | (QData)((IData)(vlSelf->top__DOT__ysyx_core__DOT__ysyx_ALU__DOT__remw_res)))))
                            : ((2U & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ALUCtrl))
                                ? ((1U & (IData)(vlSelf->top__DOT__ysyx_core__DOT__ALUCtrl))
                                    ? (((QData)((IData)(

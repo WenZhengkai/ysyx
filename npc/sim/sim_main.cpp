@@ -1,5 +1,7 @@
 /**********CONFIG DEFINES*********/
 #define CONFIG_DIFFTEST
+//#define CONFIG_TIMER_GETTIMEOFDAY
+//#define CONFIG_TARGET_AM
 
 #include "Vtop.h"
 #include "verilated.h"
