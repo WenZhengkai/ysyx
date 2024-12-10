@@ -1,4 +1,4 @@
-`define CONFIG_ISA64
+//`define CONFIG_ISA64
 
 `ifdef CONFIG_ISA64
 parameter W = 64;

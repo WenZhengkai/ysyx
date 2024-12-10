@@ -65,13 +65,14 @@ always @(*)begin
 		2'b01:		ALUCtrl = 5'b00001;	//substraction
 		2'b10:  case(funt3)
 				3'b000: ALUCtrl =  RtypeMul ? 5'b01010 : (RtypeSub? 5'b00001 : 5'b00000);
-				3'b001: ALUCtrl = 5'b00010;	//sll
-				3'b100: ALUCtrl = RtypeDiv ? 5'b01011 : 5'b00101;	// div, xor
+				3'b001: ALUCtrl = funt7[0] ? 5'b10000 : 5'b00010;	//mulh,sll
+				3'b100: ALUCtrl = RtypeDiv ? (opcode[3] ? 5'b01011: 5'b01110) : 5'b00101;	// divw, div, xor
 				3'b101: ALUCtrl = divu && (opcode == 7'b0110011) ? 5'b01101 :(shif_ari ? 5'b00111 : 5'b00110);	//divu, sra, srl
-				3'b111: ALUCtrl = 5'b01001;	//and
+				
 				3'b010: ALUCtrl = 5'b00011;	//slt
 				3'b011: ALUCtrl = 5'b00100;	//sltu
-				3'b110: ALUCtrl = RtypeDiv ? 5'b01100 : 5'b01000;	//rem
+				3'b110: ALUCtrl = RtypeDiv ? (opcode[3] ? 5'b01100 : 5'b01111) : 5'b01000;	//remw, rem, or
+			  	3'b111: ALUCtrl = funt7[0] ? 5'b10001 : 5'b01001;	// remu, and
 			  default:	ALUCtrl = 5'bxxxxx;
 			  endcase
 		2'b11: case(funt3)

@@ -35,7 +35,7 @@ bool npc_in_pmem(paddr_t addr) {
 }
 uint32_t *guest_to_host(paddr_t paddr)
 {
-	return (uint32_t *) (paddr + (paddr_t)pmem - CONFIG_MBASE);
+	return (uint32_t *) (paddr + (uint64_t)pmem - CONFIG_MBASE);
 }
 word_t host_read(void *addr, int len)
 {

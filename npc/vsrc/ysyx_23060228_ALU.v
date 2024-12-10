@@ -2,7 +2,9 @@ module ysyx_23060228_ALU #(DATA_WIDTH = 1)(
 	input  [DATA_WIDTH - 1:0]	srca,
 	input  [DATA_WIDTH - 1:0]	srcb,
 	input  [4:0]			ALUCtrl,
+	/* verilator lint_off UNUSEDSIGNAL */
 	input						dw,
+	/* verilator lint_on UNUSEDSIGNAL */
 
 	output [DATA_WIDTH - 1:0]	ALURes,
 	output 				Zero
@@ -39,15 +41,35 @@ wire [DATA_WIDTH - 1: 0]slt_res	= ($signed(srca) < $signed(srcb))? 'd1 : 'd0;
 wire [DATA_WIDTH - 1: 0]sltu_res= (srca < srcb)? 'd1 : 'd0;
 wire [DATA_WIDTH - 1: 0]mul_res = srca * srcb;
 wire [DATA_WIDTH - 1: 0] or_res = srca | srcb;
+
+`ifdef CONFIG_ISA64
 //>>> divw >>>
-wire [DATA_WIDTH/2 - 1: 0] divw_res = $signed(srca[31:0])/$signed(srcb[31:0]);
-wire [DATA_WIDTH - 1: 0] div_res = {{32{divw_res[31]}},{divw_res[31:0]}};
+wire [DATA_WIDTH/2 - 1: 0] divw1_res = $signed(srca[31:0])/$signed(srcb[31:0]);
+wire [DATA_WIDTH - 1: 0] divw_res = {{32{divw1_res[31]}},{divw1_res[31:0]}};
 //<<< divw <<<
 //>>> remw >>>
-wire [DATA_WIDTH/2 - 1: 0] remw_res = $signed(srca[31:0])% $signed(srcb[31:0]);
-wire [DATA_WIDTH - 1: 0] rem_res = {{32{remw_res[31]}},{remw_res[31:0]}};
+wire [DATA_WIDTH/2 - 1: 0] remw1_res = $signed(srca[31:0])% $signed(srcb[31:0]);
+wire [DATA_WIDTH - 1: 0] remw_res = {{32{remw1_res[31]}},{remw1_res[31:0]}};
 //<<< remw <<<
+`endif
+
 wire [DATA_WIDTH - 1: 0] divu_res = $unsigned(srca)/$unsigned(srcb);
+
+wire [DATA_WIDTH - 1: 0] div_res = $signed(srca)/$signed(srcb);
+wire [DATA_WIDTH - 1: 0] rem_res = $signed(srca)%$signed(srcb);
+
+//>>> mulh >>>
+`ifdef CONFIG_ISA64
+
+`else
+/* verilator lint_off UNUSEDSIGNAL */
+wire [64 - 1 : 0 ] mulh1_res = $signed(srca)*$signed(srcb);
+/* verilator lint_on UNUSEDSIGNAL */
+wire [DATA_WIDTH - 1 : 0 ] mulh_res = mulh1_res[63:32];
+`endif
+//<<< mulh <<<
+
+wire [DATA_WIDTH - 1: 0] remu_res = $unsigned(srca)%$unsigned(srcb);
 
 always@(*)begin
 	case(ALUCtrl)
@@ -62,9 +84,15 @@ always@(*)begin
 		5'b00011: ALURes_temp = slt_res;				//slt
 		5'b01000: ALURes_temp = or_res;					//or
 		5'b01010: ALURes_temp = mul_res;				//mul
-		5'b01011: ALURes_temp = div_res;				//divw, //TODO: IT is divw
-		5'b01100: ALURes_temp = rem_res;				//rem
+		`ifdef CONFIG_ISA64
+		5'b01011: ALURes_temp = divw_res;				//divw, //TODO: IT is divw
+		5'b01100: ALURes_temp = remw_res;				//remw
+		`endif
 		5'b01101: ALURes_temp = divu_res;				//divu
+		5'b01110: ALURes_temp = div_res;				//div
+		5'b01111: ALURes_temp = rem_res;				//rem
+		5'b10000: ALURes_temp = mulh_res;				//mulh
+		5'b10001: ALURes_temp = remu_res;				//remu
 		default:ALURes_temp = {DATA_WIDTH{1'b0}};
 	endcase
 

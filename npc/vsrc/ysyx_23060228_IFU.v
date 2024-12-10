@@ -22,16 +22,26 @@ wire [31: 0]	DPI_DataFromMem;
 
 assign inst = DPI_DataFromMem;
 
+`ifdef CONFIG_ISA64
 /* longint raddr is only use in RV64 */
 import "DPI-C" function void npc_inst_read(input longint raddr, output int rdata);
+
+`else
+import "DPI-C" function void npc_inst_read(input int raddr, output int rdata);
+`endif
 
 always@(*) begin
 	npc_inst_read(pc,DPI_DataFromMem);
 end
 
 //>>>>>>> write next PC to sim env >>>>>>>
+`ifdef CONFIG_ISA64
 /* longint raddr is only use in RV64 */
 import "DPI-C" function void npc_nextPC_write(input longint nextPC);
+
+`else
+import "DPI-C" function void npc_nextPC_write(input int nextPC);
+`endif
 
 wire [DATA_WIDTH - 1 :0] DPI_nextPC = pc;
 

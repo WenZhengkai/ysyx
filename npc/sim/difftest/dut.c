@@ -27,7 +27,12 @@ void difftest_skip_ref() {
 }
 
 void init_difftest(long img_size) {
+	#ifdef CONFIG_ISA64
 	char ref_so_file[] = "/home/kai/.ssh/ysyx-workbench/nemu/build/riscv64-nemu-interpreter-so";
+	#else
+	char ref_so_file[] = "/home/kai/.ssh/ysyx-workbench/nemu/build/riscv32-nemu-interpreter-so";
+	#endif
+	
 	void *handle;
 	handle = dlopen(ref_so_file, RTLD_LAZY);
 	assert(handle);
