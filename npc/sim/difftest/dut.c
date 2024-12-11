@@ -32,7 +32,7 @@ void init_difftest(long img_size) {
 	#else
 	char ref_so_file[] = "/home/kai/.ssh/ysyx-workbench/nemu/build/riscv32-nemu-interpreter-so";
 	#endif
-	
+
 	void *handle;
 	handle = dlopen(ref_so_file, RTLD_LAZY);
 	assert(handle);
@@ -76,7 +76,6 @@ void difftest_step(vaddr_t pc, vaddr_t npc) {
     is_skip_ref = false;
     return;
   	}
-
 	ref_difftest_exec(1);
 	ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
 

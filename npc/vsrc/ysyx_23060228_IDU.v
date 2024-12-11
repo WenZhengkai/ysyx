@@ -72,7 +72,7 @@ always @(*)begin
 				3'b010: ALUCtrl = 5'b00011;	//slt
 				3'b011: ALUCtrl = 5'b00100;	//sltu
 				3'b110: ALUCtrl = RtypeDiv ? (opcode[3] ? 5'b01100 : 5'b01111) : 5'b01000;	//remw, rem, or
-			  	3'b111: ALUCtrl = funt7[0] ? 5'b10001 : 5'b01001;	// remu, and
+			  	3'b111: ALUCtrl = (opcode == 7'b0110011) & funt7[0] ? 5'b10001 : 5'b01001;	// remu, and/andi
 			  default:	ALUCtrl = 5'bxxxxx;
 			  endcase
 		2'b11: case(funt3)

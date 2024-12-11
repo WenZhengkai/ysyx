@@ -76,7 +76,7 @@ ysyx_23060228_IDU ysyx_IDU(
 	.Wmask(Wmask),
 	.dw(dw)
 );
-ysyx_23060228_RegFile #(DATA_WIDTH, 5, 32)ysyx_RegFile(
+ysyx_23060228_RegFile #(DATA_WIDTH, 5)ysyx_RegFile(
 	.clk(clk),
 	.rs1(inst[19:15]),
 	.rs2(inst[24:20]),

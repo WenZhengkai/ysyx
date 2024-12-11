@@ -21,7 +21,7 @@ void dump_gpr() {
   int i;
   printf("/********Register Print**********/\n");
   printf("pc:  \t" FMT_ADDR "\n", cpu.pc);
-  for (i = 0; i < 32; i++) {
+  for (i = 0; i < NR_GPR; i++) {
     //printf("gpr[%d]:  \t" FMT_WORD "\n", i, cpu_gpr[i]);
     printf("gpr[%d]:  \t" FMT_WORD "\n", i, cpu.gpr[i]);
   }
@@ -52,7 +52,7 @@ extern "C" void npc_nextPC_write(paddr_t nextPC) {
 //<<<<<<<< using dpi-c, get nextPC from npc <<<<<<<<<<<
 
 void CPU_state_update(vaddr_t topPC) {
-	for(gprindex=0; gprindex < 32; gprindex++){
+	for(gprindex=0; gprindex < NR_GPR; gprindex++){
 		cpu.gpr[gprindex] = cpu_gpr[gprindex];
 	}
 	/*********** assign next PC to cpu.pc ***********/

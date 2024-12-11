@@ -16,7 +16,7 @@ extern NPCState npc_state;
 
 /* isa cpu state */
 typedef struct {
-	word_t gpr[32];
+	word_t gpr[NR_GPR];
 	vaddr_t pc;
 } riscv64_CPU_state;
 

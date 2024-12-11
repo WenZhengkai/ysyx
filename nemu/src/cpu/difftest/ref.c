@@ -19,7 +19,7 @@
 #include <memory/paddr.h>
 #define NR_GPR MUXDEF(CONFIG_RVE, 16, 32)
 struct diff_context_t {
-	word_t gpr[32];
+	word_t gpr[NR_GPR];
 	vaddr_t pc;
 };
 

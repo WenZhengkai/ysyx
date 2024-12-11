@@ -1,8 +1,15 @@
 /**********CONFIG DEFINES*********/
 //#define CONFIG_ISA64
-//#define CONFIG_DIFFTEST
+#define CONFIG_RVE
+#define CONFIG_DIFFTEST
 //#define CONFIG_TIMER_GETTIMEOFDAY
 //#define CONFIG_TARGET_AM
+
+#ifdef CONFIG_RVE
+#define NR_GPR 16
+#else
+#define NR_GPR 32
+#endif
 
 #include "Vtop.h"
 #include "verilated.h"

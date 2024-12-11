@@ -1,4 +1,5 @@
 //`define CONFIG_ISA64
+`define CONFIG_RVE
 
 `ifdef CONFIG_ISA64
 parameter W = 64;
