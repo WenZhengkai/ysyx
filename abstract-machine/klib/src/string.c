@@ -83,7 +83,18 @@ void *memmove(void *dst, const void *src, size_t n) {
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
-  panic("Not implemented");
+  //panic("Not implemented");
+    // Cast the void pointers to char pointers for byte-wise copying
+    char *d = (char *)out;
+    const char *s = (const char *)in;
+
+    // Copy n bytes from in to out
+    for (size_t i = 0; i < n; i++) {
+        d[i] = s[i];
+    }
+
+    // Return the destination pointer
+    return out;
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
