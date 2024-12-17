@@ -1,15 +1,17 @@
 module ysyx_23060228_RVcore#(DATA_WIDTH = 32, INST_WIDTH = 32)(
 	input		clk,
 	input		rst,
-	//input [DATA_WIDTH - 1 :0]	DataFromMem,
-	output [INST_WIDTH - 1 :0]	inst,
-	output [DATA_WIDTH - 1  :0]	pc
-	//output [DATA_WIDTH - 1:0]	AddrMem,
-	//output [DATA_WIDTH - 1:0]	DataToMem,
-	//output [7 : 0]		Wmask,
-	//output 			MemWrite
+	input [INST_WIDTH - 1 :0]	FromMem_inst,
+	input [DATA_WIDTH - 1  :0] 	FromMem_Data,
+	output [DATA_WIDTH - 1  :0] ToMem_Data,
+	output [DATA_WIDTH - 1  :0] ToMem_Addr,
+	output [7 : 0]		Wmask,
+	output 			MemWrite,
+	output [DATA_WIDTH - 1  :0]	pc	
+	
 
 );
+wire [31:0] inst;
 wire		PCSrc;
 wire [DATA_WIDTH -  1:0]	tnpc;
 wire		Zero;
@@ -30,9 +32,9 @@ wire			PCTarget_srca_key;
 
 wire [DATA_WIDTH -1 :0]	AddrMem;
 wire [DATA_WIDTH -1 :0]	DataToMem;
-wire			MemWrite;
+//wire			MemWrite;
 wire [DATA_WIDTH -1 :0] DataFromMem;
-wire [7:0]		Wmask;
+//wire [7:0]		Wmask;
 wire			dw;
 
 assign		AddrMem		= 	ALURes;	
@@ -42,10 +44,14 @@ ysyx_23060228_LSU #(DATA_WIDTH)ysyx_LSU(
 	.AddrMem(AddrMem),	
 	.Wmask(Wmask),
 	.DataToMem(DataToMem),
-	.MemWrite(MemWrite),
+	//.MemWrite(MemWrite),
 	.funt3_2(inst[14]),
+	.FromMem_Data(FromMem_Data),
+	.ToMem_Addr(ToMem_Addr),
 
+	.ToMem_Data(ToMem_Data),
 	.DataFromMem(DataFromMem)
+	
 );
 
 ysyx_23060228_IFU #(DATA_WIDTH)ysyx_IFU(
@@ -55,6 +61,7 @@ ysyx_23060228_IFU #(DATA_WIDTH)ysyx_IFU(
 	.tnpc(tnpc),			//target next pc
 	.snpc(PCplus4),
 	
+	.FromMem_inst(FromMem_inst),
 	.inst(inst),
 	.pc(pc)
 

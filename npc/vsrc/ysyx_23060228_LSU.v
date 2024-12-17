@@ -3,17 +3,23 @@ module ysyx_23060228_LSU#(DATA_WIDTH = 32)(
 	input [DATA_WIDTH -1 : 0]	AddrMem,
 	input [7 : 0]			Wmask,
 	input [DATA_WIDTH -1 : 0]	DataToMem,
-	input				MemWrite,
+	//input				MemWrite,
 	input				funt3_2,
+	input [DATA_WIDTH -1 : 0] FromMem_Data,
 
-	output[DATA_WIDTH -1 : 0]	DataFromMem
+	output [DATA_WIDTH - 1  :0] ToMem_Addr,
+	output[DATA_WIDTH -1 : 0]	DataFromMem,
+	output[DATA_WIDTH -1 : 0] ToMem_Data
 );
-
+assign ToMem_Addr = AddrMem;
+assign ToMem_Data = DataToMem;
+wire [DATA_WIDTH - 1 : 0]	TEMP_DataFromMem = FromMem_Data;
 /* verilator lint_off UNUSEDSIGNAL */
 wire [64 - 1 : 0]	Wmask64 = {{8{Wmask[7]}},{8{Wmask[6]}},{8{Wmask[5]}},{8{Wmask[4]}},{8{Wmask[3]}},{8{Wmask[2]}},{8{Wmask[1]}},{8{Wmask[0]}}};
 /* verilator lint_on UNUSEDSIGNAL */
 
 /* DPI-C */
+/*
 `ifdef CONFIG_ISA64
 import "DPI-C" function void npc_pmem_read(input longint raddr, output longint rdata);
 import "DPI-C" function void npc_pmem_write( input longint waddr, input longint wdata, input byte wmask);
@@ -34,6 +40,7 @@ always @(*) begin
   		npc_pmem_write(AddrMem, DataToMem, Wmask);
 	end	
 end
+*/
 /* DPI-C END */ 
 
 wire sig = 

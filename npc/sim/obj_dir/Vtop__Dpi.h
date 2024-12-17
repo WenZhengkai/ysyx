@@ -16,13 +16,13 @@ extern "C" {
 
 
     // DPI IMPORTS
-    // DPI import at ../vsrc/ysyx_23060228_IFU.v:30:30
+    // DPI import at ../vsrc/InstMem.v:15:30
     extern void npc_inst_read(int raddr, int* rdata);
-    // DPI import at ../vsrc/ysyx_23060228_IFU.v:43:30
+    // DPI import at ../vsrc/InstMem.v:28:30
     extern void npc_nextPC_write(int nextPC);
-    // DPI import at ../vsrc/ysyx_23060228_LSU.v:21:30
+    // DPI import at ../vsrc/DataMem.v:20:30
     extern void npc_pmem_read(int raddr, int* rdata);
-    // DPI import at ../vsrc/ysyx_23060228_LSU.v:22:30
+    // DPI import at ../vsrc/DataMem.v:21:30
     extern void npc_pmem_write(int waddr, int wdata, char wmask);
     // DPI import at ../vsrc/ysyx_23060228_RegFile.v:24:30
     extern void set_gpr_ptr(const svOpenArrayHandle a);

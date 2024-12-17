@@ -1,7 +1,9 @@
 /**********CONFIG DEFINES*********/
 //#define CONFIG_ISA64
 #define CONFIG_RVE
-#define CONFIG_DIFFTEST
+//#define CONFIG_DIFFTEST
+//#define CONFIG_ITRACE
+#define CONFIG_WAVE
 //#define CONFIG_TIMER_GETTIMEOFDAY
 //#define CONFIG_TARGET_AM
 
@@ -74,9 +76,13 @@ void cpu_exec(uint64_t n) {
 		main_time++;
 		top->clk = 0;
 		top->eval();
+		#ifdef CONFIG_WAVE
 		tfp->dump(main_time);
+		#endif
 
-		//print_instr(top);
+		#ifdef CONFIG_ITRACE
+		print_instr(top);
+		#endif
 
 		//>>>>>> change npc sim env state >>>>>>>>>
 		if(top->inst == 0x00100073){
@@ -93,7 +99,9 @@ void cpu_exec(uint64_t n) {
 		main_time++;
 		top->clk = 1;
 		top->eval();
+		#ifdef CONFIG_WAVE
 		tfp->dump(main_time);
+		#endif
 
 		CPU_state_update(top->pc);	// define in dpi.c, must execute it after top->eval(), to copy the cpu state to simulation environment
 		trace_and_difftest(pc_tmp, cpu.pc);

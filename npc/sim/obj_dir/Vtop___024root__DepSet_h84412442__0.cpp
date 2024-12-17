@@ -8,36 +8,10 @@
 #include "Vtop__Syms.h"
 #include "Vtop___024root.h"
 
-extern "C" void npc_pmem_read(int raddr, int* rdata);
-
-VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32im__DOT__ysyx_LSU__DOT__npc_pmem_read_TOP(IData/*31:0*/ raddr, IData/*31:0*/ &rdata) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32im__DOT__ysyx_LSU__DOT__npc_pmem_read_TOP\n"); );
-    // Body
-    int raddr__Vcvt;
-    for (size_t raddr__Vidx = 0; raddr__Vidx < 1; ++raddr__Vidx) raddr__Vcvt = raddr;
-    int rdata__Vcvt;
-    npc_pmem_read(raddr__Vcvt, &rdata__Vcvt);
-    rdata = rdata__Vcvt;
-}
-
-extern "C" void npc_pmem_write(int waddr, int wdata, char wmask);
-
-VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32im__DOT__ysyx_LSU__DOT__npc_pmem_write_TOP(IData/*31:0*/ waddr, IData/*31:0*/ wdata, CData/*7:0*/ wmask) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32im__DOT__ysyx_LSU__DOT__npc_pmem_write_TOP\n"); );
-    // Body
-    int waddr__Vcvt;
-    for (size_t waddr__Vidx = 0; waddr__Vidx < 1; ++waddr__Vidx) waddr__Vcvt = waddr;
-    int wdata__Vcvt;
-    for (size_t wdata__Vidx = 0; wdata__Vidx < 1; ++wdata__Vidx) wdata__Vcvt = wdata;
-    char wmask__Vcvt;
-    for (size_t wmask__Vidx = 0; wmask__Vidx < 1; ++wmask__Vidx) wmask__Vcvt = wmask;
-    npc_pmem_write(waddr__Vcvt, wdata__Vcvt, wmask__Vcvt);
-}
-
 extern "C" void npc_inst_read(int raddr, int* rdata);
 
-VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32im__DOT__ysyx_IFU__DOT__npc_inst_read_TOP(IData/*31:0*/ raddr, IData/*31:0*/ &rdata) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32im__DOT__ysyx_IFU__DOT__npc_inst_read_TOP\n"); );
+VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_instmem__DOT__npc_inst_read_TOP(IData/*31:0*/ raddr, IData/*31:0*/ &rdata) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root____Vdpiimwrap_top__DOT__ysyx_instmem__DOT__npc_inst_read_TOP\n"); );
     // Body
     int raddr__Vcvt;
     for (size_t raddr__Vidx = 0; raddr__Vidx < 1; ++raddr__Vidx) raddr__Vcvt = raddr;
@@ -48,12 +22,38 @@ VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32im__DOT_
 
 extern "C" void npc_nextPC_write(int nextPC);
 
-VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32im__DOT__ysyx_IFU__DOT__npc_nextPC_write_TOP(IData/*31:0*/ nextPC) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32im__DOT__ysyx_IFU__DOT__npc_nextPC_write_TOP\n"); );
+VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_instmem__DOT__npc_nextPC_write_TOP(IData/*31:0*/ nextPC) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root____Vdpiimwrap_top__DOT__ysyx_instmem__DOT__npc_nextPC_write_TOP\n"); );
     // Body
     int nextPC__Vcvt;
     for (size_t nextPC__Vidx = 0; nextPC__Vidx < 1; ++nextPC__Vidx) nextPC__Vcvt = nextPC;
     npc_nextPC_write(nextPC__Vcvt);
+}
+
+extern "C" void npc_pmem_read(int raddr, int* rdata);
+
+VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_datamem__DOT__npc_pmem_read_TOP(IData/*31:0*/ raddr, IData/*31:0*/ &rdata) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root____Vdpiimwrap_top__DOT__ysyx_datamem__DOT__npc_pmem_read_TOP\n"); );
+    // Body
+    int raddr__Vcvt;
+    for (size_t raddr__Vidx = 0; raddr__Vidx < 1; ++raddr__Vidx) raddr__Vcvt = raddr;
+    int rdata__Vcvt;
+    npc_pmem_read(raddr__Vcvt, &rdata__Vcvt);
+    rdata = rdata__Vcvt;
+}
+
+extern "C" void npc_pmem_write(int waddr, int wdata, char wmask);
+
+VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_datamem__DOT__npc_pmem_write_TOP(IData/*31:0*/ waddr, IData/*31:0*/ wdata, CData/*7:0*/ wmask) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root____Vdpiimwrap_top__DOT__ysyx_datamem__DOT__npc_pmem_write_TOP\n"); );
+    // Body
+    int waddr__Vcvt;
+    for (size_t waddr__Vidx = 0; waddr__Vidx < 1; ++waddr__Vidx) waddr__Vcvt = waddr;
+    int wdata__Vcvt;
+    for (size_t wdata__Vidx = 0; wdata__Vidx < 1; ++wdata__Vidx) wdata__Vcvt = wdata;
+    char wmask__Vcvt;
+    for (size_t wmask__Vidx = 0; wmask__Vidx < 1; ++wmask__Vidx) wmask__Vcvt = wmask;
+    npc_pmem_write(waddr__Vcvt, wdata__Vcvt, wmask__Vcvt);
 }
 
 extern "C" void set_gpr_ptr(const svOpenArrayHandle a);
