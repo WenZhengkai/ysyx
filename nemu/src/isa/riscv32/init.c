@@ -32,6 +32,9 @@ static void restart() {
 
   /* The zero register is always 0. */
   cpu.gpr[0] = 0;
+
+  /* Set the mstatus for difftest */
+  cpu.mstatus = MUXDEF(CONFIG_RV64, 0xa0001800, 0x00001800);
 }
 
 void init_isa() {

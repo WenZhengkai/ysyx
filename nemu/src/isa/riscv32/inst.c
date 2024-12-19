@@ -89,6 +89,32 @@ void ftrace_check(word_t pc, word_t dnpc){
 #endif
 	return;
 }
+//>>>CSR>>>//
+static inline word_t* csr_decode(word_t csr) {
+  switch (csr) {
+    case 0x300: return &cpu.mstatus;
+    case 0x305: return &cpu.mtvec;
+    case 0x342: return &cpu.mcause;
+    case 0x341: return &cpu.mepc;
+    default: panic("unimplemented CSR 0x%x", csr);
+  }
+  return NULL;
+}
+
+static void csrrw(word_t *dest, const word_t *src, word_t csrid){
+    word_t *csr = csr_decode(csrid);
+    word_t tmp = (src != NULL ? *src : 0);
+    if (dest != NULL) { *dest = *csr; }
+    if (src != NULL) { *csr = tmp; }  
+}
+
+static void csrrs(word_t *dest, const word_t *src, word_t csrid){
+    word_t *csr = csr_decode(csrid);
+    word_t tmp = (src != NULL ? *src : 0);
+    if (dest != NULL) { *dest = *csr | *src; }
+    if (src != NULL) { *csr = tmp; }  
+}
+//<<<CSR<<<//
 static int decode_exec(Decode *s) {
   int rd = 0;
   word_t src1 = 0, src2 = 0, imm = 0;
@@ -202,6 +228,13 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 010 ????? 00100 11", slti   , I, R(rd) = ((sword_t)src1 < (sword_t)imm) ? (word_t)1 : (word_t)0);
   INSTPAT("??????? ????? ????? 000 ????? 00000 11", lb    , I, R(rd) = SEXT(Mr(src1 + imm, 1),8));
   INSTPAT("??????? ????? ????? 110 ????? 00100 11", ori   , I, R(rd) = src1 | imm);
+
+  INSTPAT("???????????? ????? 001 ????? 1110011", csrrw, I, csrrw(&R(rd),&src1, imm));
+  INSTPAT("???????????? ????? 010 ????? 1110011", csrrs, I, csrrs(&R(rd),&src1, imm));
+
+  INSTPAT("000000000000 00000 000 00000 1110011", ecall, I, s->dnpc = isa_raise_intr(11,s->pc));
+  INSTPAT("0011000 00010 00000 000 00000 1110011", mret, R, s->dnpc = cpu.mepc);
+
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
 
   INSTPAT_END();
