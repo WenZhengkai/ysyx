@@ -32,7 +32,7 @@ word_t isa_end_intr() {
 #ifdef CONFIG_ETRACE
   printf("[ETRACE]:mret, mepc="FMT_WORD"\n",cpu.mepc);
 #endif
-  return cpu.mepc + 4;
+  return cpu.mepc;
 }
 
 word_t isa_query_intr() {
