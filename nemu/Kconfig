@@ -170,6 +170,11 @@ config FTRACE
   depends on ITRACE
   bool "Enable Funtional Trace"
   default y
+  
+config ETRACE
+  depends on ITRACE
+  bool "Enable Exception Trace"
+  default y
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
