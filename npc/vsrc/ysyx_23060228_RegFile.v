@@ -4,7 +4,7 @@ module ysyx_23060228_RegFile #(DATA_WIDTH = 32, ADDR_WIDTH = 5)(
 	input  [ADDR_WIDTH - 1 :0]	rs1,
 	input  [ADDR_WIDTH - 1:0]	rs2,
 	input  [ADDR_WIDTH - 1:0]	rd,
-	/* verilator lint_off UNUSEDSIGNAL */
+	/* verilator lint_on UNUSEDSIGNAL */
 	input  [DATA_WIDTH - 1:0]	dest,
 	input		RegWrite,
 	output [DATA_WIDTH - 1:0]	src1,

@@ -1,5 +1,6 @@
 //`define CONFIG_ISA64
 `define CONFIG_RVE
+`define CONFIG_PIPE
 
 `ifdef CONFIG_ISA64
 parameter XLEN = 64;
@@ -54,6 +55,20 @@ ysyx_23060228_RVcore #(DATA_WIDTH, 32) ysyx_core_rv64im(
 );
 `else
 
+`ifdef CONFIG_PIPE
+RVCore2 ysyx_core_rv32e(
+	.clock(clk),
+	.reset(rst),
+	.io_from_mem_data(FromMem_Data),
+	.io_to_mem_data(ToMem_Data),
+	.io_to_mem_addr(ToMem_Addr),
+	.io_to_mem_Wmask(Wmask),
+	.io_to_mem_MemWrite(MemWrite),
+	.io_inst(inst),
+	.io_pc(pc)
+);
+
+`else
 ysyx_23060228_RVcore #(32, 32) ysyx_core_rv32im(
 	.clk(clk),
 	.rst(rst),
@@ -65,7 +80,8 @@ ysyx_23060228_RVcore #(32, 32) ysyx_core_rv32im(
 	.MemWrite(MemWrite),
 	.pc(pc)
 );
+`endif	//end CONFIG_PIPE
 
-`endif
+`endif	//end CONFIG_ISA64
 
 endmodule

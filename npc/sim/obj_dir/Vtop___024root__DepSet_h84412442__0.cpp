@@ -56,17 +56,6 @@ VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_datamem__DOT__npc
     npc_pmem_write(waddr__Vcvt, wdata__Vcvt, wmask__Vcvt);
 }
 
-extern "C" void set_gpr_ptr(const svOpenArrayHandle a);
-
-VL_INLINE_OPT void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32im__DOT__ysyx_RegFile__DOT__set_gpr_ptr__Vdpioc2_TOP(const VlUnpacked<IData/*31:0*/, 16> &a) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32im__DOT__ysyx_RegFile__DOT__set_gpr_ptr__Vdpioc2_TOP\n"); );
-    // Body
-    static const int a__Vopenprops__ulims[2] = {15, 0};
-    static const VerilatedVarProps a__Vopenprops(VLVT_UINT32, VLVD_IN, VerilatedVarProps::Packed(), 31, 0, VerilatedVarProps::Unpacked(), 1, a__Vopenprops__ulims);
-    VerilatedDpiOpenVar a__Vopenarray (&a__Vopenprops, &a);
-    set_gpr_ptr(&a__Vopenarray);
-}
-
 #ifdef VL_DEBUG
 VL_ATTR_COLD void Vtop___024root___dump_triggers__act(Vtop___024root* vlSelf);
 #endif  // VL_DEBUG
