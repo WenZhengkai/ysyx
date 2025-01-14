@@ -41,6 +41,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 
   c->pdir = NULL;
   c->mepc = (uintptr_t)entry;
+  c->gpr[10] = (uintptr_t)arg;
 #if __riscv_xlen == 32
   c->mstatus = 0x1800;
 #else
