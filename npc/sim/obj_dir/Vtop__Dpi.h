@@ -24,6 +24,8 @@ extern "C" {
     extern void npc_pmem_read(int raddr, int* rdata);
     // DPI import at ../vsrc/DataMem.v:21:30
     extern void npc_pmem_write(int waddr, int wdata, char wmask);
+    // DPI import at ../vsrc/chisel-npc/generated/ysyx_23060228_RegFile_BlackBox.v:24:30
+    extern void set_gpr_ptr(const svOpenArrayHandle a);
 
 #ifdef __cplusplus
 }

@@ -15,18 +15,24 @@ class Vtop___024root final : public VerilatedModule {
     // DESIGN SPECIFIC STATE
     VL_IN8(clk,0,0);
     VL_IN8(rst,0,0);
+    CData/*0:0*/ top__DOT__ysyx_core_rv32e__DOT__idu_io_to_exu_bits_idu_to_reg_RegWrite;
     CData/*0:0*/ __Vtrigrprev__TOP__clk;
     CData/*0:0*/ __VactContinue;
     VL_OUT(inst,31,0);
     VL_OUT(pc,31,0);
+    IData/*31:0*/ top__DOT__ToMem_Addr;
+    IData/*31:0*/ top__DOT__ToMem_Data;
     IData/*31:0*/ top__DOT__ysyx_instmem__DOT__DPI_DataFromMem;
     IData/*31:0*/ top__DOT__ysyx_datamem__DOT__DPI_DataFromMem;
     IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__ifu__DOT__pc;
     IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__ifu__DOT___pc_T_1;
+    IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__idu__DOT__regfile_src2;
+    IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__idu__DOT__ImmExt;
     IData/*31:0*/ __Vtask_top__DOT__ysyx_instmem__DOT__npc_inst_read__0__rdata;
     IData/*31:0*/ __Vtask_top__DOT__ysyx_datamem__DOT__npc_pmem_read__2__rdata;
     IData/*31:0*/ __VstlIterCount;
     IData/*31:0*/ __VactIterCount;
+    VlUnpacked<IData/*31:0*/, 16> top__DOT__ysyx_core_rv32e__DOT__idu__DOT__regfile__DOT__x;
     VlUnpacked<CData/*0:0*/, 2> __Vm_traceActivity;
     VlTriggerVec<1> __VstlTriggered;
     VlTriggerVec<1> __VactTriggered;

@@ -134,11 +134,19 @@ int main(int argc, char** argv){
 	tfp->open("wave.vcd");
 
 	top->inst   = 0x0;
+
+	paddr_write(0x80000000,4,0xffc10113);	// addi	sp,sp,-4
+	paddr_write(0x80000004,4,0x7bc50513);	// addi	a0,a0,1980
+	paddr_write(0x80000008,4,0x02010593);	// a1,sp,32
+	paddr_write(0x8000000c,4,0x00148493);	// addi	s1,s1,1
+	paddr_write(0x80000010,4,0x23578793);	// addi	a5,a5,565
+	paddr_write(0x80000014,4,0x00100073);	// ebreak
+	/*
 	paddr_write(0x80000000,4,0x00000117);	// auipc x2, 0x0
 	paddr_write(0x80000004,4,0x108100e7);	// jalr x1,x2 0x80000108
 	paddr_write(0x80000108,4,0xfffff0b7);	// lui x1, 0xfffff000
 	paddr_write(0x8000010c,4,0x00100073);	// ebreak
-	
+	*/
 	parse_args(argc, argv);
 
 	isa_init();
@@ -148,10 +156,21 @@ int main(int argc, char** argv){
 
 	init_difftest(img_size);
 
+	// reset
+	top->clk = 0;
+	top->rst = 1;
+	top->eval();
+	main_time++;
+	top->clk = 1;
+	top->rst = 1;
+	top->eval();
+	main_time++;
+	
+
 	top->rst    = 0;
 	//top->DataFromMem = 0;
 	top->clk   = 1;
-	
+	// reset end
 
 	sdb_mainloop();
 
