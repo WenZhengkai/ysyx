@@ -7,7 +7,12 @@ module ysyx_23060228_RVcore#(DATA_WIDTH = 32, INST_WIDTH = 32)(
 	output [DATA_WIDTH - 1  :0] ToMem_Addr,
 	output [7 : 0]		Wmask,
 	output 			MemWrite,
-	output [DATA_WIDTH - 1  :0]	pc	
+	output [DATA_WIDTH - 1  :0]	pc,
+	// for debug: commit
+	output reg commit_valid,
+	output reg [DATA_WIDTH - 1 : 0] commit_pc,
+	output reg [DATA_WIDTH - 1 : 0] commit_next_pc,
+	output reg [INST_WIDTH - 1 : 0]	commit_inst
 	
 
 );
@@ -37,8 +42,26 @@ wire [DATA_WIDTH -1 :0] DataFromMem;
 //wire [7:0]		Wmask;
 wire			dw;
 
+
+
+
 assign		AddrMem		= 	ALURes;	
 assign 		DataToMem	= 	src2;
+
+//>>>for debug commit
+assign commit_valid = 1'b1;
+assign commit_next_pc = pc;
+always@(posedge clk) begin
+	if(rst) begin
+		commit_pc <= 'd0;
+		commit_inst <= 'd0;
+	end
+	else begin
+		commit_pc <= pc;
+		commit_inst <= inst;
+	end
+end
+//<<< for debug commit
 
 ysyx_23060228_LSU #(DATA_WIDTH)ysyx_LSU(
 	.AddrMem(AddrMem),	
@@ -89,7 +112,7 @@ ysyx_23060228_RegFile #(DATA_WIDTH, 5)ysyx_RegFile(
 	.rs2(inst[24:20]),
 	.rd(inst[11:7]),
 	.dest(Result),	// Data writed to Registers
-	.RegWrite(RegWrite),
+	.RegWrite(RegWrite & !rst),
 
 	.src1(src1),
 	.src2(src2)

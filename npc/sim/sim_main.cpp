@@ -1,8 +1,8 @@
 /**********CONFIG DEFINES*********/
 //#define CONFIG_ISA64
 #define CONFIG_RVE
-//#define CONFIG_DIFFTEST
-//#define CONFIG_ITRACE
+#define CONFIG_DIFFTEST
+#define CONFIG_ITRACE
 #define CONFIG_WAVE
 //#define CONFIG_TIMER_GETTIMEOFDAY
 //#define CONFIG_TARGET_AM
@@ -43,9 +43,13 @@ double sc_time_stamp()
 	return main_time;
 }
 static void print_instr(Vtop *top) {
-	printf("0x" FMT_ADDR  ":\t0x%08x\n", top->pc, top->inst);
+	printf("Last commited: 0x" FMT_ADDR  ":\t0x%08x\n", top->commit_pc, top->commit_inst);
 }
 static void trace_and_difftest(vaddr_t pc, vaddr_t npc) {
+
+#ifdef CONFIG_ITRACE
+	print_instr(top);
+#endif
 
 #ifdef CONFIG_DIFFTEST
 	difftest_step(pc, npc);
@@ -69,7 +73,7 @@ void cpu_exec(uint64_t n) {
 			return;
 		default: npc_state.state = NPC_RUNNING;
 	}
-	for(; n > 0; n--){
+	for(; n > 0; ){
 		//while(!contextp->gotFinish()){
 		pc_tmp = cpu.pc;
 		/* Low value of clock */
@@ -80,12 +84,9 @@ void cpu_exec(uint64_t n) {
 		tfp->dump(main_time);
 		#endif
 
-		#ifdef CONFIG_ITRACE
-		print_instr(top);
-		#endif
 
 		//>>>>>> change npc sim env state >>>>>>>>>
-		if(top->inst == 0x00100073){
+		if(top->commit_inst == 0x00100073){
 			npc_state.state = NPC_END;
 			npc_state.halt_ret = cpu.gpr[10];
 		} 
@@ -103,8 +104,14 @@ void cpu_exec(uint64_t n) {
 		tfp->dump(main_time);
 		#endif
 
-		CPU_state_update(top->pc);	// define in dpi.c, must execute it after top->eval(), to copy the cpu state to simulation environment
-		trace_and_difftest(pc_tmp, cpu.pc);
+		if(top->commit_valid){
+			CPU_state_update(top->commit_next_pc);	// define in dpi.c, must execute it after top->eval(), to copy the cpu state to simulation environment
+			trace_and_difftest(top->commit_pc, cpu.pc);
+
+			//loop counter
+			n--;
+		}
+
 
 	}
 
@@ -135,10 +142,11 @@ int main(int argc, char** argv){
 
 	top->inst   = 0x0;
 
-	paddr_write(0x80000000,4,0xffc10113);	// addi	sp,sp,-4
-	paddr_write(0x80000004,4,0x7bc50513);	// addi	a0,a0,1980
-	paddr_write(0x80000008,4,0x02010593);	// a1,sp,32
-	paddr_write(0x8000000c,4,0x00148493);	// addi	s1,s1,1
+
+	paddr_write(0x80000000,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x80000004,4,0x00148493);	// addi	s1,s1,1
+	paddr_write(0x80000008,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x8000000c,4,0xffc10113);	// addi	sp,sp,-4
 	paddr_write(0x80000010,4,0x23578793);	// addi	a5,a5,565
 	paddr_write(0x80000014,4,0x00100073);	// ebreak
 	/*
@@ -161,10 +169,12 @@ int main(int argc, char** argv){
 	top->rst = 1;
 	top->eval();
 	main_time++;
+	tfp->dump(main_time);
 	top->clk = 1;
 	top->rst = 1;
 	top->eval();
 	main_time++;
+	tfp->dump(main_time);
 	
 
 	top->rst    = 0;

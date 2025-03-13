@@ -12,12 +12,14 @@ parameter XLEN = 32;
 module top #(DATA_WIDTH = XLEN)(
 	input		clk,
 	input		rst,
-	//input  [DATA_WIDTH - 1:0]	DataFromMem,
+	// for debug
 	output  [31:0]	inst,
-	output [DATA_WIDTH - 1:0]	pc
-	//output [DATA_WIDTH - 1:0]	AddrMem,
-	//output [DATA_WIDTH - 1:0]	DataToMem,
-	//output 		MemWrite
+	output [DATA_WIDTH - 1:0]	pc,
+	output commit_valid,
+	output [DATA_WIDTH - 1:0]	commit_pc,
+	output [DATA_WIDTH - 1:0]	commit_next_pc,
+	output [31 : 0] commit_inst
+
 );
 
 wire [DATA_WIDTH - 1: 0] ToMem_Addr;
@@ -51,7 +53,8 @@ ysyx_23060228_RVcore #(DATA_WIDTH, 32) ysyx_core_rv64im(
 	.ToMem_Addr(ToMem_Addr),
 	.Wmask(Wmask),
 	.MemWrite(MemWrite),
-	.pc(pc)
+	.pc(pc),
+	.commit_valid(commit_valid)
 );
 `else
 
@@ -65,7 +68,12 @@ RVCore2 ysyx_core_rv32e(
 	.io_to_mem_Wmask(Wmask),
 	.io_to_mem_MemWrite(MemWrite),
 	.io_inst(inst),
-	.io_pc(pc)
+	.io_pc(pc),
+	//for debug:commit
+	.io_commit_valid(commit_valid),
+	.io_commit_pc(commit_pc),
+	.io_commit_next_pc(commit_next_pc),
+	.io_commit_inst(commit_inst)
 );
 
 `else
@@ -78,7 +86,11 @@ ysyx_23060228_RVcore #(32, 32) ysyx_core_rv32im(
 	.ToMem_Addr(ToMem_Addr),
 	.Wmask(Wmask),
 	.MemWrite(MemWrite),
-	.pc(pc)
+	.pc(pc),
+	.commit_valid(commit_valid),
+	.commit_pc(commit_pc),
+	.commit_next_pc(commit_next_pc),
+	.commit_inst(commit_inst)
 );
 `endif	//end CONFIG_PIPE
 

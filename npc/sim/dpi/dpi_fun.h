@@ -56,7 +56,7 @@ void CPU_state_update(vaddr_t topPC) {
 		cpu.gpr[gprindex] = cpu_gpr[gprindex];
 	}
 	/*********** assign next PC to cpu.pc ***********/
-	cpu.pc = npc_nextPC;
+	cpu.pc = topPC;
 }
 
 extern "C" void npc_pmem_read(paddr_t raddr, word_t *rdata) {
