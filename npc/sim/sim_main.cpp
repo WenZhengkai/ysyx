@@ -1,8 +1,8 @@
 /**********CONFIG DEFINES*********/
 //#define CONFIG_ISA64
-#define CONFIG_RVE
+//#define CONFIG_RVE
 #define CONFIG_DIFFTEST
-#define CONFIG_ITRACE
+//#define CONFIG_ITRACE
 #define CONFIG_WAVE
 //#define CONFIG_TIMER_GETTIMEOFDAY
 //#define CONFIG_TARGET_AM
@@ -46,18 +46,17 @@ static void print_instr(Vtop *top) {
 	printf("Last commited: 0x" FMT_ADDR  ":\t0x%08x\n", top->commit_pc, top->commit_inst);
 }
 static void trace_and_difftest(vaddr_t pc, vaddr_t npc) {
-
 #ifdef CONFIG_ITRACE
 	print_instr(top);
 #endif
 
 #ifdef CONFIG_DIFFTEST
-	difftest_step(pc, npc);
 	/* skip the difftest in next inst commit */
 	if(skip_ref){
 		difftest_skip_ref();
 		skip_ref =false;
 	}
+	difftest_step(pc, npc);
 #endif
 
 }
@@ -91,7 +90,7 @@ void cpu_exec(uint64_t n) {
 			npc_state.halt_ret = cpu.gpr[10];
 		} 
 		if(npc_state.state != NPC_RUNNING){
-			npc_state.halt_pc = pc_tmp;
+			npc_state.halt_pc = top->commit_pc;
 			break;
 		}
 		//<<<<< change npc sim env state <<<<<<<<<		
@@ -142,19 +141,53 @@ int main(int argc, char** argv){
 
 	top->inst   = 0x0;
 
+/*
+	// test for auipc, lui:
+	paddr_write(0x80000000,4,0x0180026f);	// jal x4, 24
+	paddr_write(0x80000004,4,0x022911b7);	// lui x3, 8849
+	paddr_write(0x80000008,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x8000000c,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x80000010,4,0x00058613);	// addi a2,a1,0
+	paddr_write(0x80000014,4,0x012b1217);	// auipc x4, 4785
+	paddr_write(0x80000018,4,0x00100073);	// ebreak
+*/
+/*
+	// test for data hazard: read after write
+	paddr_write(0x80000000,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x80000004,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x80000008,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x8000000c,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x80000010,4,0x00058613);	// addi a2,a1,0
+	paddr_write(0x80000014,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x80000018,4,0x00100073);	// ebreak
 
+*/
+/*	
+	// test for data hazard: multi inst, single busy rd
+	paddr_write(0x80000000,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x80000004,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x80000008,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x8000000c,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x80000010,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x80000014,4,0x02010593);	// addi a1,sp,32
+	paddr_write(0x80000018,4,0x00100073);	// ebreak
+*/
+
+/*
 	paddr_write(0x80000000,4,0x02010593);	// addi a1,sp,32
 	paddr_write(0x80000004,4,0x00148493);	// addi	s1,s1,1
 	paddr_write(0x80000008,4,0x02010593);	// addi a1,sp,32
 	paddr_write(0x8000000c,4,0xffc10113);	// addi	sp,sp,-4
 	paddr_write(0x80000010,4,0x23578793);	// addi	a5,a5,565
 	paddr_write(0x80000014,4,0x00100073);	// ebreak
-	/*
+
+*/
+	
 	paddr_write(0x80000000,4,0x00000117);	// auipc x2, 0x0
 	paddr_write(0x80000004,4,0x108100e7);	// jalr x1,x2 0x80000108
 	paddr_write(0x80000108,4,0xfffff0b7);	// lui x1, 0xfffff000
 	paddr_write(0x8000010c,4,0x00100073);	// ebreak
-	*/
+
 	parse_args(argc, argv);
 
 	isa_init();

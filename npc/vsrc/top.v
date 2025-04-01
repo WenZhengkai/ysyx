@@ -1,5 +1,5 @@
 //`define CONFIG_ISA64
-`define CONFIG_RVE
+//`define CONFIG_RVE		
 `define CONFIG_PIPE
 
 `ifdef CONFIG_ISA64

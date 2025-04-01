@@ -54,7 +54,30 @@ int strcmp(const char *s1, const char *s2) {
 }
 
 int strncmp(const char *s1, const char *s2, size_t n) {
-  panic("Not implemented");
+  //panic("Not implemented");
+      // 如果 n 为 0，直接返回 0，表示两字符串相等
+	  if (n == 0) {
+        return 0;
+    }
+
+    while (n--) {
+        // 比较两个字符
+        if (*s1 != *s2) {
+            // 返回两字符的差值
+            return (unsigned char)*s1 - (unsigned char)*s2;
+        }
+
+        // 如果到达字符串末尾，退出循环
+        if (*s1 == '\0' || *s2 == '\0') {
+            break;
+        }
+
+        // 移动到下一个字符
+        s1++;
+        s2++;
+    }
+
+    return 0; // 如果前 n 个字符都相等，则返回 0
 }
 
 void *memset(void *s, int c, size_t n) {
