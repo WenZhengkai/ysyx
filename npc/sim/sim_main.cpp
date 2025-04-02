@@ -1,9 +1,9 @@
 /**********CONFIG DEFINES*********/
 //#define CONFIG_ISA64
-//#define CONFIG_RVE
+#define CONFIG_RVE
 #define CONFIG_DIFFTEST
 //#define CONFIG_ITRACE
-#define CONFIG_WAVE
+//#define CONFIG_WAVE
 //#define CONFIG_TIMER_GETTIMEOFDAY
 //#define CONFIG_TARGET_AM
 
@@ -34,7 +34,10 @@ CPU_state cpu = {};
 /* isa cpu state end*/
 
 #ifdef CONFIG_DIFFTEST
-bool skip_ref = false;
+int skip_ref = 0;		// `0` means don't need skip; > 0 means need skip
+void skip_ref_add () {
+	skip_ref += 2;
+}
 #endif
 
 vluint64_t main_time = 0;	//initial 
@@ -52,9 +55,9 @@ static void trace_and_difftest(vaddr_t pc, vaddr_t npc) {
 
 #ifdef CONFIG_DIFFTEST
 	/* skip the difftest in next inst commit */
-	if(skip_ref){
+	if(skip_ref > 0){
 		difftest_skip_ref();
-		skip_ref =false;
+		skip_ref--;
 	}
 	difftest_step(pc, npc);
 #endif

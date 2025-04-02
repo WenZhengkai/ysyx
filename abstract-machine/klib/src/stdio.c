@@ -7,6 +7,58 @@
 
 #define MAX_PRINT_SIZE 256 
 int int_to_string(int num, char *buffer);
+// Helper function to convert a long to a string (base 10)
+int long_to_string(long value, char *out) {
+    char buffer[64]; // temporary buffer
+    int len = 0, i = 0;
+    int is_negative = 0;
+
+    if (value < 0) {
+        is_negative = 1;
+        value = -value;
+    }
+
+    do {
+        buffer[len++] = (value % 10) + '0';
+        value /= 10;
+    } while (value);
+
+    if (is_negative) {
+        buffer[len++] = '-';
+    }
+
+    // Reverse the string into the output
+    for (i = 0; i < len; ++i) {
+        out[i] = buffer[len - 1 - i];
+    }
+
+    out[len] = '\0';
+    return len;
+}
+
+// Helper function to convert an integer to a hexadecimal string
+int int_to_hex_string(unsigned int value, char *out) {
+    char buffer[32];
+    int len = 0, i = 0;
+
+    do {
+        int digit = value % 16;
+        if (digit < 10) {
+            buffer[len++] = digit + '0';
+        } else {
+            buffer[len++] = digit - 10 + 'a';
+        }
+        value /= 16;
+    } while (value);
+
+    // Reverse the string into the output
+    for (i = 0; i < len; ++i) {
+        out[i] = buffer[len - 1 - i];
+    }
+
+    out[len] = '\0';
+    return len;
+}
 int printf(const char *fmt, ...) {
   //panic("Not implemented");
 	va_list ap;
@@ -52,6 +104,26 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
     				out[outi] = arg_char;
     				outi++;
     				break;
+					}
+				case 'x': {
+						unsigned int arg_hex = va_arg(ap, unsigned int);
+						int arg_str_len = int_to_hex_string(arg_hex, out + outi);
+						outi += arg_str_len;
+						break;
+					}
+				case 'l': {
+						fmti++;
+						if (fmt[fmti] == 'd') {
+							long arg_long = va_arg(ap, long);
+							int arg_str_len = long_to_string(arg_long, out + outi);
+							outi += arg_str_len;
+						} else {
+							// Unknown format, output directly
+							out[outi++] = '%';
+							out[outi++] = 'l';
+							out[outi++] = fmt[fmti];
+						}
+						break;
 					}
 				default:
 				    // unknow format, output directly

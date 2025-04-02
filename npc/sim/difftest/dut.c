@@ -28,13 +28,14 @@ void difftest_skip_ref() {
 
 void init_difftest(long img_size) {
 	#ifdef CONFIG_ISA64
-	char ref_so_file[] = "/home/kai/.ssh/ysyx-workbench/nemu/build/riscv64-nemu-interpreter-so";
+	char ref_so_file[] = "/home/kai/.ssh/ysyx-workbench/nemu/ref/riscv64-nemu-interpreter-so";
 	#else
-	char ref_so_file[] = "/home/kai/.ssh/ysyx-workbench/nemu/build/riscv32-nemu-interpreter-so";
+	char ref_so_file[] = "/home/kai/.ssh/ysyx-workbench/nemu/ref/riscv32-nemu-interpreter-so";
 	#endif
 
 	void *handle;
 	handle = dlopen(ref_so_file, RTLD_LAZY);
+	if(handle == NULL) printf(__FILE__ ": *********ref_so_file error***********\nNot find: %s\n", ref_so_file);
 	assert(handle);
 
 	ref_difftest_memcpy = (void (*)(paddr_t, void*, size_t, bool))dlsym(handle, "difftest_memcpy");

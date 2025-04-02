@@ -6,7 +6,8 @@
 extern CPU_state cpu;
 
 #ifdef CONFIG_DIFFTEST
-extern bool skip_ref;
+extern int skip_ref;
+void skip_ref_add(void);
 #endif
 
 word_t *cpu_gpr = NULL;
@@ -74,13 +75,13 @@ extern "C" void npc_pmem_read(paddr_t raddr, word_t *rdata) {
 	}else if(raddr == 0xa0000048){		// RTC_ADDR=0xa0000048
 		*rdata = get_time() & 0x00000000ffffffff;
 		#ifdef CONFIG_DIFFTEST
-		skip_ref = true;
+		skip_ref_add();
 		#endif
 	}
 	else if(raddr == 0xa000004c){
 		*rdata = get_time() >> 32;
 		#ifdef CONFIG_DIFFTEST
-		skip_ref = true;
+		skip_ref_add();
 		#endif
 	}else{
 		//printf("not in pmem\n");
@@ -122,7 +123,7 @@ extern "C" void npc_pmem_write(paddr_t waddr, word_t wdata, char wmask) {
   if(waddr == 0xa00003f8) {	//SERIAL_PORT=0xa00003f8
 	putc((char)wdata,stderr);
 	#ifdef CONFIG_DIFFTEST
-	skip_ref = true;
+	skip_ref_add();
 	#endif
   }else{
 	paddr_write(waddr, len, wdata);
