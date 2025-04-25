@@ -77,6 +77,8 @@ class Commit extends NPCBundle {
   val inst  = UInt(32.W)
 }
 
+
+
 class RVCore2 extends Module 
 with HasNPCParameter
 {
