@@ -152,15 +152,15 @@ with TYPE_INST{
     val io = IO(new Bundle{
         val from_isu = Flipped(Decoupled(new DecodeIO))
         val to_wbu = Decoupled(new ExuToWbuIO)
-        val bruRes = Output(new BruRes)
+        //val bruRes = Output(new BruRes)
         val to_mem = new ToMem
-        val from_mem = new FromMem 
+        val from_mem = new FromMem
+        val redirect = Output(new Redirect)
 
     })
     //>>> io
-    val AnyInvalidCondition = false.B // TODO: add condition to it
-    // ready/valid setted here
-    HandShakeDeal(io.from_isu, io.to_wbu, AnyInvalidCondition)
+
+
 
 
     val MicroOp = io.from_isu.bits
@@ -225,7 +225,7 @@ with TYPE_INST{
     //<<<ready/valid function unit
 
     //>>> branch pc calculate
-    val bruRes = io.bruRes
+    val bruRes = Wire(new BruRes)
     val jalrBruRes = Wire(new BruRes)
     jalrBruRes.valid := in.valid && inBits.cf.isBranch && (inBits.cf.inst(6,0) === "b1100111".U)
     //jalrBruRes.valid := in.valid && inBits.cf.isBranch
@@ -251,7 +251,14 @@ with TYPE_INST{
         csrBruRes.valid   -> csrBruRes
     ))
 
+    // redirect
+    val PredictError = bruRes.targetPc =/= MicroOp.cf.next_pc
+    io.redirect.valid := in.valid && bruRes.valid && PredictError
+    io.redirect.target := bruRes.targetPc
+
     out.bits.cf.next_pc := Mux(bruRes.valid, bruRes.targetPc, MicroOp.cf.next_pc)
+
+    val isRedirect = io.redirect.valid
 
     //<<< branch pc calculate 
 
@@ -260,4 +267,12 @@ with TYPE_INST{
     //out.bits.data.Alu0Res <> alu0.io.out
     //out.bits.data.Alu0Res.valid := alu0.io.out.valid
     out.bits.data.Alu0Res.bits := alu0.io.out.bits
+
+
+    // ready/valid setted here
+    HandShakeDeal(io.from_isu, io.to_wbu, 
+                  AnyInvalidCondition = false.B, 
+                  AnyStopCodition = isRedirect && in.valid
+                  )
+
 }

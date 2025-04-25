@@ -32,7 +32,7 @@ class ToMem extends NPCBundle {
 }
 
 object StageConnect {
-  def apply[T <: Data](left: DecoupledIO[T], right: DecoupledIO[T], right_producer_fire: Bool )   = {
+  def apply[T <: Data](left: DecoupledIO[T], right: DecoupledIO[T], right_producer_fire: Bool, isFlush: Bool = false.B )   = {
     val arch = "pipeline"
     // 为展示抽象的思想, 此处代码省略了若干细节
     if      (arch == "single")   { 
@@ -46,7 +46,6 @@ object StageConnect {
       // left.valid : output from combinational
       // right.valid : input from a reg
       val valid = RegInit(false.B)
-      val isFlush = false.B 
       when(isFlush) {valid := false.B}
       .elsewhen(right.ready && left.valid) {valid := left.valid}
       .elsewhen(right_producer_fire) {valid := false.B}
@@ -63,8 +62,8 @@ object StageConnect {
 }
 
 object HandShakeDeal {
-  def apply [T1 <: Data,T2 <: Data](consumer: DecoupledIO[T1], producer: DecoupledIO[T2], AnyInvalidCondition: Bool) = {
-      consumer.ready :=  (false.B === consumer.valid) || producer.fire // TODO: finish it
+  def apply [T1 <: Data,T2 <: Data](consumer: DecoupledIO[T1], producer: DecoupledIO[T2], AnyInvalidCondition: Bool, AnyStopCodition: Bool = false.B) = {
+      consumer.ready :=  ((false.B === consumer.valid) || producer.fire) && (false.B === AnyStopCodition ) // TODO: finish it
       producer.valid := consumer.valid && (false.B === AnyInvalidCondition) // TODO: finish it
   }
 
@@ -77,7 +76,10 @@ class Commit extends NPCBundle {
   val inst  = UInt(32.W)
 }
 
-
+class Redirect extends NPCBundle {
+  val target = UInt(XLen.W)
+  val valid  = Bool()
+}
 
 class RVCore2 extends Module 
 with HasNPCParameter
@@ -106,19 +108,22 @@ with HasNPCParameter
   io.to_mem <> exu.io.to_mem
   //<<<TODO:To Mem<<<//
 
-  StageConnect(ifu.io.to_idu, idu.io.from_ifu, idu.io.to_isu.fire)
-  //StageConnect(idu.io.to_exu, exu.io.from_idu, exu.io.to_lsu.fire)
-  StageConnect(idu.io.to_isu, isu.io.from_idu, isu.io.to_exu.fire)
-  StageConnect(isu.io.to_exu, exu.io.from_isu, exu.io.to_wbu.fire)
-  StageConnect(exu.io.to_wbu, wbu.io.from_exu, wbu.io.to_reg.valid && true.B)
+  val redirect = exu.io.redirect.valid
+
+  StageConnect(ifu.io.to_idu, idu.io.from_ifu, idu.io.to_isu.fire, redirect)
+  StageConnect(idu.io.to_isu, isu.io.from_idu, isu.io.to_exu.fire, redirect)
+  StageConnect(isu.io.to_exu, exu.io.from_isu, exu.io.to_wbu.fire, isFlush = false.B)   // Don't flush Exu itself. Using HandShakeDeal to stop front pipeline
+  StageConnect(exu.io.to_wbu, wbu.io.from_exu, wbu.io.to_reg.valid && true.B, isFlush = false.B)
   //StageConnect(exu.io.to_lsu, lsu.io.from_exu, lsu.io.to_wbu.fire)
   //StageConnect(lsu.io.to_wbu, wbu.io.from_lsu, wbu.io.to_reg.valid && true.B)
+
+  ifu.io.redirect <> exu.io.redirect
 
   isu.io.wb <> wbu.io.to_reg.bits
 
   wbu.io.to_reg.ready := true.B
 
-  ifu.io.from_exu_bruRes <> exu.io.bruRes     // calculated branch result
+  //ifu.io.from_exu_bruRes <> exu.io.bruRes     // calculated branch result
 
   // for debug: commit
   

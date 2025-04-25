@@ -186,10 +186,22 @@ int main(int argc, char** argv){
 
 */
 	
+
 	paddr_write(0x80000000,4,0x00000117);	// auipc x2, 0x0
 	paddr_write(0x80000004,4,0x108100e7);	// jalr x1,x2 0x80000108
 	paddr_write(0x80000108,4,0xfffff0b7);	// lui x1, 0xfffff000
 	paddr_write(0x8000010c,4,0x00100073);	// ebreak
+
+
+/*  	paddr_write(0x80000000,4, 0x00000463);   // beq x0, x0, 0x80000008 (taken, target=0x80000008)
+ 	paddr_write(0x80000004,4, 0x00100093);   // addi x1, x0, 1      (测试分支预测失败时能否正确flush)
+ 	paddr_write(0x80000008,4, 0x014000ef);   // target1: jal x1, 0x80000014 (taken, target=0x80000014)
+ 	paddr_write(0x8000000c,4, 0x00200113);   // addi x2, x0, 2      (测试jal延迟槽)
+ 	paddr_write(0x80000010,4, 0x00100073);   // ebreak             (不应该执行)
+ 	paddr_write(0x80000014,4, 0x02001063);   // target2: bne x0, x0, 0x80000020 (not taken)
+ 	paddr_write(0x80000018,4, );   // jalr x3, x1, 0      (测试jalr预测，target=0x80000020)
+ 	paddr_write(0x8000001c,4, );   // addi x4, x0, 4      (测试jalr延迟槽)
+ 	paddr_write(0x80000020,4,0x00100073);   // ebreak */
 
 	parse_args(argc, argv);
 

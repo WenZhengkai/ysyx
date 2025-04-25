@@ -29,13 +29,13 @@ module EXU(
   output [31:0] io_to_wbu_bits_data_Alu0Res_bits,
   output [31:0] io_to_wbu_bits_data_data_from_mem,
   output [31:0] io_to_wbu_bits_data_csrRdata,
-  output        io_bruRes_valid,
-  output [31:0] io_bruRes_targetPc,
   output [31:0] io_to_mem_data,
   output [31:0] io_to_mem_addr,
   output [7:0]  io_to_mem_Wmask,
   output        io_to_mem_MemWrite,
-  input  [31:0] io_from_mem_data
+  input  [31:0] io_from_mem_data,
+  output [31:0] io_redirect_target,
+  output        io_redirect_valid
 );
   wire [31:0] alu0_io_out_bits; // @[EXU.scala 183:22]
   wire [31:0] alu0_io_in_bits_srca; // @[EXU.scala 183:22]
@@ -63,7 +63,6 @@ module EXU(
   wire [31:0] csr0_io_cfIn_inst; // @[EXU.scala 206:22]
   wire [31:0] csr0_io_cfIn_pc; // @[EXU.scala 206:22]
   wire  csr0_io_jmp; // @[EXU.scala 206:22]
-  wire  _io_from_isu_ready_T_1 = io_to_wbu_ready & io_to_wbu_valid; // @[Decoupled.scala 51:35]
   wire  _jalrBruRes_valid_T = io_from_isu_valid & io_from_isu_bits_cf_isBranch; // @[EXU.scala 230:34]
   wire  jalrBruRes_valid = io_from_isu_valid & io_from_isu_bits_cf_isBranch & io_from_isu_bits_cf_inst[6:0] == 7'h67; // @[EXU.scala 230:56]
   wire [31:0] _jalrBruRes_targetPc_T_1 = io_from_isu_bits_data_rfSrc1 + io_from_isu_bits_data_imm; // @[EXU.scala 232:48]
@@ -74,9 +73,14 @@ module EXU(
   wire [31:0] typebBruRes_targetPc = alu0_io_taken ? pcIfBranch : _typebBruRes_targetPc_T_1; // @[EXU.scala 237:32]
   wire  csrBruRes_valid = io_from_isu_valid & csr0_io_jmp; // @[EXU.scala 240:33]
   wire [31:0] csrBruRes_targetPc = csr0_io_out_bits; // @[EXU.scala 239:25 241:24]
-  wire [31:0] _io_bruRes_T_targetPc = csrBruRes_valid ? csrBruRes_targetPc : 32'h0; // @[Mux.scala 101:16]
-  wire  _io_bruRes_T_1_valid = typebBruRes_valid ? typebBruRes_valid : csrBruRes_valid; // @[Mux.scala 101:16]
-  wire [31:0] _io_bruRes_T_1_targetPc = typebBruRes_valid ? typebBruRes_targetPc : _io_bruRes_T_targetPc; // @[Mux.scala 101:16]
+  wire [31:0] _bruRes_T_targetPc = csrBruRes_valid ? csrBruRes_targetPc : 32'h0; // @[Mux.scala 101:16]
+  wire  _bruRes_T_1_valid = typebBruRes_valid ? typebBruRes_valid : csrBruRes_valid; // @[Mux.scala 101:16]
+  wire [31:0] _bruRes_T_1_targetPc = typebBruRes_valid ? typebBruRes_targetPc : _bruRes_T_targetPc; // @[Mux.scala 101:16]
+  wire  bruRes_valid = jalrBruRes_valid ? jalrBruRes_valid : _bruRes_T_1_valid; // @[Mux.scala 101:16]
+  wire [31:0] bruRes_targetPc = jalrBruRes_valid ? jalrBruRes_targetPc : _bruRes_T_1_targetPc; // @[Mux.scala 101:16]
+  wire  PredictError = bruRes_targetPc != io_from_isu_bits_cf_next_pc; // @[EXU.scala 255:40]
+  wire  _T = io_redirect_valid & io_from_isu_valid; // @[EXU.scala 275:48]
+  wire  _io_from_isu_ready_T_1 = io_to_wbu_ready & io_to_wbu_valid; // @[Decoupled.scala 51:35]
   ALU alu0 ( // @[EXU.scala 183:22]
     .io_out_bits(alu0_io_out_bits),
     .io_in_bits_srca(alu0_io_in_bits_srca),
@@ -109,23 +113,23 @@ module EXU(
     .io_cfIn_pc(csr0_io_cfIn_pc),
     .io_jmp(csr0_io_jmp)
   );
-  assign io_from_isu_ready = ~io_from_isu_valid | _io_from_isu_ready_T_1; // @[RVCore.scala 67:55]
-  assign io_to_wbu_valid = io_from_isu_valid; // @[RVCore.scala 68:40]
+  assign io_from_isu_ready = (~io_from_isu_valid | _io_from_isu_ready_T_1) & ~_T; // @[RVCore.scala 66:74]
+  assign io_to_wbu_valid = io_from_isu_valid; // @[RVCore.scala 67:40]
   assign io_to_wbu_bits_cf_inst = io_from_isu_bits_cf_inst; // @[EXU.scala 172:17]
   assign io_to_wbu_bits_cf_pc = io_from_isu_bits_cf_pc; // @[EXU.scala 172:17]
-  assign io_to_wbu_bits_cf_next_pc = io_bruRes_valid ? io_bruRes_targetPc : io_from_isu_bits_cf_next_pc; // @[EXU.scala 254:31]
+  assign io_to_wbu_bits_cf_next_pc = bruRes_valid ? bruRes_targetPc : io_from_isu_bits_cf_next_pc; // @[EXU.scala 259:31]
   assign io_to_wbu_bits_ctrl_ResSrc = io_from_isu_bits_ctrl_ResSrc; // @[EXU.scala 173:19]
   assign io_to_wbu_bits_ctrl_rfWen = io_from_isu_bits_ctrl_rfWen; // @[EXU.scala 173:19]
   assign io_to_wbu_bits_ctrl_rd = io_from_isu_bits_ctrl_rd; // @[EXU.scala 173:19]
-  assign io_to_wbu_bits_data_Alu0Res_bits = alu0_io_out_bits; // @[EXU.scala 262:32]
+  assign io_to_wbu_bits_data_Alu0Res_bits = alu0_io_out_bits; // @[EXU.scala 269:32]
   assign io_to_wbu_bits_data_data_from_mem = lsu0_io_out_bits; // @[EXU.scala 203:33]
   assign io_to_wbu_bits_data_csrRdata = csr0_io_out_bits; // @[EXU.scala 214:28]
-  assign io_bruRes_valid = jalrBruRes_valid ? jalrBruRes_valid : _io_bruRes_T_1_valid; // @[Mux.scala 101:16]
-  assign io_bruRes_targetPc = jalrBruRes_valid ? jalrBruRes_targetPc : _io_bruRes_T_1_targetPc; // @[Mux.scala 101:16]
   assign io_to_mem_data = lsu0_io_to_mem_data; // @[EXU.scala 198:15]
   assign io_to_mem_addr = lsu0_io_to_mem_addr; // @[EXU.scala 198:15]
   assign io_to_mem_Wmask = lsu0_io_to_mem_Wmask; // @[EXU.scala 198:15]
   assign io_to_mem_MemWrite = lsu0_io_to_mem_MemWrite; // @[EXU.scala 198:15]
+  assign io_redirect_target = jalrBruRes_valid ? jalrBruRes_targetPc : _bruRes_T_1_targetPc; // @[Mux.scala 101:16]
+  assign io_redirect_valid = io_from_isu_valid & bruRes_valid & PredictError; // @[EXU.scala 256:51]
   assign alu0_io_in_bits_srca = io_from_isu_bits_data_fuSrc1; // @[EXU.scala 185:21]
   assign alu0_io_in_bits_srcb = io_from_isu_bits_data_fuSrc2; // @[EXU.scala 186:21]
   assign alu0_io_in_bits_fuOpType = io_from_isu_bits_ctrl_fuOpType; // @[EXU.scala 187:25]

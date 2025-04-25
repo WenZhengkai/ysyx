@@ -19,7 +19,9 @@ class IFUIO extends NPCBundle {
     //val snpc = Input(UInt(XLen.W))
     val pc = Output(UInt(XLen.W))
 
-    val from_exu_bruRes = Input(new BruRes)
+    //val from_exu_bruRes = Input(new BruRes)
+
+    val redirect = Input(new Redirect)
 }
 
 class BruRes extends NPCBundle {
@@ -47,8 +49,8 @@ with HasNPCParameter{
     */
     val inInstOp = io.inst(6,0)
     val inInst   = io.inst
-    val bruRes = Wire(new BruRes)
-    val exuBruRes = io.from_exu_bruRes
+    //val bruRes = Wire(new BruRes)
+    //val exuBruRes = io.from_exu_bruRes
     val isBranch = MuxLookup(inInstOp,false.B, Array(
         "b1101111".U    -> true.B,      /* jal */
         "b1100111".U    -> true.B,      /* jalr */
@@ -62,25 +64,38 @@ with HasNPCParameter{
     //>>> jal branch process
     val jalBruRes = Wire(new BruRes)
     jalBruRes.valid := inInstOp === "b1101111".U
+    val isJal = jalBruRes.valid
     val jalImmExt   = Cat(Fill(XLen - 21, inInst(31)), inInst(31), inInst(19,12), inInst(20), inInst(30, 21), 0.U(1.W))
     jalBruRes.targetPc := pc + jalImmExt
 
     //<<<
 
     //>>> branch result
-    bruRes.valid    := jalBruRes.valid || exuBruRes.valid    // TODO: add more result source
+/*     bruRes.valid    := jalBruRes.valid || exuBruRes.valid    // TODO: add more result source
     bruRes.targetPc := MuxCase(0.U, Array(
         (jalBruRes.valid)   ->  jalBruRes.targetPc,
         (exuBruRes.valid)   ->  exuBruRes.targetPc
-    ))
+    )) */
 
     //<<<
 
     // BPU
-    val next_pc = Mux(bruRes.valid, bruRes.targetPc, pc + 4.U )     // TODO: change it when get result branch
-    // BPU end
+    //val next_pc = Mux(bruRes.valid, bruRes.targetPc, pc + 4.U )     // TODO: change it when get result branch
 
-    when(out.ready === false.B) {       /* stop in back */
+
+    val snpc = pc + 4.U
+    val predictPc = snpc 
+    // BPU end
+    val next_pc =   Mux(io.redirect.valid,      io.redirect.target,
+                    Mux(out.ready === false.B,  pc,                 /* stop in back */
+                    Mux(needBruRes === false.B, snpc,               /* Instruction is not branch type or trap */
+                    Mux(isJal,                  jalBruRes.targetPc,
+                    Mux(isJal === false.B,      predictPc,           /* branch, jalr, csr */
+                    pc)))))                                         // otherwise
+
+    pc := next_pc
+
+/*     when(out.ready === false.B) {       /* stop in back */
         pc := pc 
         valid := valid
     }.elsewhen(needBruRes === false.B) {  /* Instruction is not branch type or trap */
@@ -92,7 +107,23 @@ with HasNPCParameter{
     }.elsewhen(bruRes.valid === true.B) {   /* already get the valid branch result */
         pc := next_pc
         valid := true.B
-    }
+    } */
+/*     when(io.redirect.valid){
+        pc := io.redirect.target
+        valid := true.B
+    }.elsewhen(out.ready === false.B) {       /* stop in back */
+        pc := pc 
+        valid := valid
+    }.elsewhen(needBruRes === false.B) {  /* Instruction is not branch type or trap */
+        pc := snpc
+        valid := valid
+    }.elsewhen(isJal) {  
+        pc := jalBruRes.targetPc
+        valid := valid
+    }.elsewhen(isJal === false.B) {   /* branch, jalr, csr */
+        pc := predictPc
+        valid := valid
+    } */
 
     //>>> io
     io.to_idu.bits.pc := pc
