@@ -81,11 +81,11 @@ with HasNPCParameter {
     io.to_mem.data := io.data.rfSrc2
 
     io.to_mem.addr := io.in.bits.srca + io.in.bits.srcb
-    io.to_mem.Wmask := MuxLookup(io.ctrl.fuOpType, "h00".U, Array(
-        LSUOpType.sb    -> "h01".U,
-        LSUOpType.sh    -> "h03".U,
-        LSUOpType.sw    -> "h0f".U,
-        LSUOpType.sd    -> "hff".U
+    io.to_mem.Wmask := MuxLookup(io.ctrl.fuOpType, "b10".U, Array(
+        LSUOpType.sb    -> "b00".U,
+        LSUOpType.sh    -> "b01".U,
+        LSUOpType.sw    -> "b10".U,
+        LSUOpType.sd    -> "b11".U
     ))
 
     io.to_mem.MemWrite := io.ctrl.MemWrite

@@ -31,7 +31,7 @@ module EXU(
   output [31:0] io_to_wbu_bits_data_csrRdata,
   output [31:0] io_to_mem_data,
   output [31:0] io_to_mem_addr,
-  output [7:0]  io_to_mem_Wmask,
+  output [1:0]  io_to_mem_Wmask,
   output        io_to_mem_MemWrite,
   input  [31:0] io_from_mem_data,
   output [31:0] io_redirect_target,
@@ -47,7 +47,7 @@ module EXU(
   wire [31:0] lsu0_io_in_bits_srcb; // @[EXU.scala 192:22]
   wire [31:0] lsu0_io_to_mem_data; // @[EXU.scala 192:22]
   wire [31:0] lsu0_io_to_mem_addr; // @[EXU.scala 192:22]
-  wire [7:0] lsu0_io_to_mem_Wmask; // @[EXU.scala 192:22]
+  wire [1:0] lsu0_io_to_mem_Wmask; // @[EXU.scala 192:22]
   wire  lsu0_io_to_mem_MemWrite; // @[EXU.scala 192:22]
   wire [31:0] lsu0_io_from_mem_data; // @[EXU.scala 192:22]
   wire  lsu0_io_ctrl_MemWrite; // @[EXU.scala 192:22]

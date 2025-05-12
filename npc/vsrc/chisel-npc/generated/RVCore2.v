@@ -4,7 +4,7 @@ module RVCore2(
   input  [31:0] io_from_mem_data,
   output [31:0] io_to_mem_data,
   output [31:0] io_to_mem_addr,
-  output [7:0]  io_to_mem_Wmask,
+  output [1:0]  io_to_mem_Wmask,
   output        io_to_mem_MemWrite,
   input  [31:0] io_inst,
   output [31:0] io_pc,
@@ -174,7 +174,7 @@ module RVCore2(
   wire [31:0] exu_io_to_wbu_bits_data_csrRdata; // @[RVCore.scala 99:19]
   wire [31:0] exu_io_to_mem_data; // @[RVCore.scala 99:19]
   wire [31:0] exu_io_to_mem_addr; // @[RVCore.scala 99:19]
-  wire [7:0] exu_io_to_mem_Wmask; // @[RVCore.scala 99:19]
+  wire [1:0] exu_io_to_mem_Wmask; // @[RVCore.scala 99:19]
   wire  exu_io_to_mem_MemWrite; // @[RVCore.scala 99:19]
   wire [31:0] exu_io_from_mem_data; // @[RVCore.scala 99:19]
   wire [31:0] exu_io_redirect_target; // @[RVCore.scala 99:19]

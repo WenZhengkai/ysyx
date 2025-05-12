@@ -26,7 +26,7 @@ class FromMem extends NPCBundle {
 class ToMem extends NPCBundle {
   val data = Output(UInt(XLen.W))
   val addr = Output(UInt(XLen.W))
-  val Wmask= Output(UInt(8.W))
+  val Wmask= Output(UInt(2.W))    // 00:b, 01:h, 10: w, 11: d
   val MemWrite = Output(Bool())
   //val MemRead = Output(Bool())
 }
