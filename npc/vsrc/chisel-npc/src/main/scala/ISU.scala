@@ -60,7 +60,6 @@ class ISU extends NPCModule {
             val rfSrc2 = Input(UInt(XLen.W))
         }
         
-        //wb, forward, flush
     })
 
     val sb = new ScoreBoard(3)      // TODO: deside the max score based on number of backend pipeline
@@ -74,9 +73,6 @@ class ISU extends NPCModule {
     val AnyInvalidCondition = dataHazard // TODO: add condition to it
     // ready/valid setted here
     HandShakeDeal(io.from_idu, io.to_exu, AnyInvalidCondition) 
-
-
-
 
 
     def rs1_rs2(rfSrc1 : UInt, rfSrc2 : UInt): (UInt, UInt) = {
@@ -96,8 +92,6 @@ class ISU extends NPCModule {
     outBits.data.rfSrc1 := rfSrc1
     outBits.data.rfSrc2 := rfSrc2
    
-
-    
 
     outBits.data.fuSrc1 := MuxLookup(inBits.ctrl.fuSrc1Type, 0.U, Array(
         FuSrcType.rfSrc1    -> rfSrc1,

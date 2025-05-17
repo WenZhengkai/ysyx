@@ -47,7 +47,6 @@ object Instructions extends TYPE_INST
 with HasNPCParameter
 {
     def NOP = 0x00000013.U
-    //val DecodeDefault = List(InstrN, FuType.csr, CSROpType.jmp)
     val DecodeDefault = List(TYPE_N, FuType.alu, ALUOpType.sll, FuSrcType.zero, FuSrcType.zero)
     def DecodeTable = RVI_Inst.table 
 }
@@ -116,15 +115,12 @@ with TYPE_INST
     val io = IO(new NPCBundle{
         val from_ifu = Flipped(Decoupled(new CtrlFlow))
         val to_isu = Decoupled(new DecodeIO)
-        //val from_wbu = Flipped(Decoupled(new WbuToRegIO))
-        //val redirect = Output(Bool())
     })
 
     val AnyInvalidCondition = false.B // TODO: add condition to it
     // ready/valid setted here
     HandShakeDeal(io.from_ifu, io.to_isu, AnyInvalidCondition) 
-    
-    //io.from_wbu.ready := true.B
+
 
     val inst = io.from_ifu.bits.inst
     val pc  = io.from_ifu.bits.pc
@@ -138,7 +134,6 @@ with TYPE_INST
     val to_isu = io.to_isu.bits
     val MemWrite = WireDefault(false.B)
     ctrl.MemWrite := MemWrite
-    //val DataToMem = regfile.io.src1
     val ResSrc = WireDefault(0.U)
     ctrl.ResSrc := ResSrc
 
@@ -163,16 +158,7 @@ with TYPE_INST
     ctrl.fuSrc1Type := fuSrc1Type
     ctrl.fuSrc2Type := fuSrc2Type
     RegWrite := isRegWrite(instType)
-/* 
-    when(inst(6,0) === "b0010011".U && inst(14, 12) === "b000".U) {
-        MemWrite := false.B
-        ResSrc := 0.U
 
-    }.otherwise{
-
-        ResSrc := 1.U
-    }
-*/
     MemWrite := MuxCase(0.U, Array(
         (instType === TYPE_S)   -> 1.U
     ))
@@ -184,12 +170,7 @@ with TYPE_INST
     //<<< Ctrl Signals <<<
 
     //>>> Immediate Extension >>>
-    //val ImmExt = WireDefault(0.U)
-    /*
-    when(instType === TYPE_I) {
-        ImmExt := Cat(Fill(XLen - 12,inst(31)), inst(31,20))
-    }
-    */
+
     val ImmExt = MuxLookup(instType, 0.U, Array(
         TYPE_I  -> Cat(Fill(XLen - 12,inst(31)), inst(31,20)),
         TYPE_U  -> (Cat(Fill(XLen - 20, inst(31)), inst(31,12)) << 12)(XLen - 1, 0),    // TODO: use 0.U(12.W)

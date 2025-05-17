@@ -221,7 +221,6 @@ with TYPE_INST{
     lsu0.io.in.valid := in.valid && (in.bits.ctrl.fuType === FuType.lsu)
 
     csr0.io.out.ready := out.ready
-    //csr0.io.in.valid := in.valid && (in.bits.ctrl.fuType === FuType.lsu)
     //<<<ready/valid function unit
 
     //>>> branch pc calculate
@@ -264,8 +263,6 @@ with TYPE_INST{
 
     // io
 
-    //out.bits.data.Alu0Res <> alu0.io.out
-    //out.bits.data.Alu0Res.valid := alu0.io.out.valid
     out.bits.data.Alu0Res.bits := alu0.io.out.bits
 
 

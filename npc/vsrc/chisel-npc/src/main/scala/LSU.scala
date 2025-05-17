@@ -63,14 +63,7 @@ class LSUIO extends FunctionUnitIO {
 
 class LSU extends NPCModule 
 with HasNPCParameter {
-    /*
-    val io = IO(new Bundle{
-        val from_exu = Flipped(Decoupled(new ExuToLsuIO))
-        val to_wbu = Decoupled(new LsuToWbuIO)
-        val to_mem = new ToMem
-        val from_mem = new FromMem
-    })
-    */
+
     val io = IO(new LSUIO)
     // io
     //>>> ready/valid

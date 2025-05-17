@@ -97,16 +97,15 @@ with HasNPCParameter
   val idu = Module(new IDU)
   val isu = Module(new ISU)
   val exu = Module(new EXU)
-  //val lsu = Module(new LSU)
   val wbu = Module(new WBU)
 
   ifu.io.inst := io.inst
   exu.io.from_mem <> io.from_mem
   io.pc := ifu.io.pc
 
-  //>>>TODO:To Mem>>>//
+  //>>>To Mem>>>//
   io.to_mem <> exu.io.to_mem
-  //<<<TODO:To Mem<<<//
+  //<<<To Mem<<<//
 
   val redirect = exu.io.redirect.valid
 
@@ -114,16 +113,13 @@ with HasNPCParameter
   StageConnect(idu.io.to_isu, isu.io.from_idu, isu.io.to_exu.fire, redirect)
   StageConnect(isu.io.to_exu, exu.io.from_isu, exu.io.to_wbu.fire, isFlush = false.B)   // Don't flush Exu itself. Using HandShakeDeal to stop front pipeline
   StageConnect(exu.io.to_wbu, wbu.io.from_exu, wbu.io.to_reg.valid && true.B, isFlush = false.B)
-  //StageConnect(exu.io.to_lsu, lsu.io.from_exu, lsu.io.to_wbu.fire)
-  //StageConnect(lsu.io.to_wbu, wbu.io.from_lsu, wbu.io.to_reg.valid && true.B)
+
 
   ifu.io.redirect <> exu.io.redirect
 
   isu.io.wb <> wbu.io.to_reg.bits
 
   wbu.io.to_reg.ready := true.B
-
-  //ifu.io.from_exu_bruRes <> exu.io.bruRes     // calculated branch result
 
   // for debug: commit
   
