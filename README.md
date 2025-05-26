@@ -1,9 +1,21 @@
-# "一生一芯"工程项目
+# 2025年集创赛竞业达杯RVgogo团队工程项目
 
-这是"一生一芯"的工程项目. 通过运行
-```bash
-bash init.sh subproject-name
-```
-进行初始化, 具体请参考[实验讲义][lecture note].
+## 运行方式
 
-[lecture note]: https://ysyx.oscc.cc/docs/
+### 编译Chisel项目
+进入路径`npc/vsrc/chisel-npc`
+执行`make doit`
+编译得到`npc/vsrc/chisel-npc/generated`中的Verilog代码
+### 编译Verilog
+进入路径`npc/sim`
+依次执行`make simnw` `make build` `make run`
+编译并且执行示例程序
+### cpu-tests示例运行
+进入路径`am-kernels/tests/cpu-tests`
+执行`make ARCH=riscv32e-npc run`
+### microbench示例运行
+进入`am-kernels/benchmarks/microbench`
+执行`make ARCH=riscv32e-npc mainargs=test run`
+### RT-Thread示例运行
+进入`rt-thread-am/bsp/abstract-machine`
+执行`make ARCH=riscv32e-npc run`
