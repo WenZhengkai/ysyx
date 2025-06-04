@@ -91,7 +91,10 @@ static struct {
 #define NR_CMD ARRLEN(cmd_table)
 void sdb_mainloop(){
 	// batch_mode
-	
+    #ifdef CONFIG_BATCH
+    	cmd_c(NULL);
+    	return;
+    #endif	
 	for(char *str; (str = rl_gets()) !=NULL;){
 		char *str_end = str + strlen(str);
 

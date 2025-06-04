@@ -18,6 +18,7 @@ class Vtop___024root final : public VerilatedModule {
         VL_IN8(clk,0,0);
         VL_IN8(rst,0,0);
         VL_OUT8(commit_valid,0,0);
+        CData/*7:0*/ top__DOT__Wmask;
         CData/*0:0*/ top__DOT__ysyx_core_rv32e__DOT__ifu_io_to_idu_ready;
         CData/*0:0*/ top__DOT__ysyx_core_rv32e__DOT__ifu_io_to_idu_bits_isBranch;
         CData/*0:0*/ top__DOT__ysyx_core_rv32e__DOT__ifu_io_redirect_valid;
@@ -78,9 +79,9 @@ class Vtop___024root final : public VerilatedModule {
         CData/*1:0*/ top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_7;
         CData/*1:0*/ top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_8;
         CData/*1:0*/ top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_9;
-        CData/*1:0*/ top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_10;
     };
     struct {
+        CData/*1:0*/ top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_10;
         CData/*1:0*/ top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_11;
         CData/*1:0*/ top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_12;
         CData/*1:0*/ top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_13;
@@ -127,6 +128,7 @@ class Vtop___024root final : public VerilatedModule {
         CData/*0:0*/ top__DOT__ysyx_core_rv32e__DOT__exu__DOT___T;
         CData/*0:0*/ top__DOT__ysyx_core_rv32e__DOT__exu__DOT__alu0__DOT__slt;
         CData/*0:0*/ top__DOT__ysyx_core_rv32e__DOT__exu__DOT__csr0__DOT__csrWen;
+        CData/*1:0*/ __Vtableidx1;
         CData/*0:0*/ __Vtrigrprev__TOP__clk;
         CData/*0:0*/ __VactContinue;
         SData/*15:0*/ top__DOT__ysyx_core_rv32e__DOT__isu__DOT__wbuClearMask;
@@ -143,10 +145,10 @@ class Vtop___024root final : public VerilatedModule {
         IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__isu_io_to_exu_bits_data_rfSrc1;
         IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__isu_io_to_exu_bits_data_rfSrc2;
         IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__exu_io_to_wbu_bits_data_csrRdata;
-        IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__idu_io_from_ifu_bits_r_inst;
-        IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__idu_io_from_ifu_bits_r_pc;
     };
     struct {
+        IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__idu_io_from_ifu_bits_r_inst;
+        IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__idu_io_from_ifu_bits_r_pc;
         IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__idu_io_from_ifu_bits_r_next_pc;
         IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_cf_inst;
         IData/*31:0*/ top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_cf_pc;

@@ -2,6 +2,7 @@
 //#define CONFIG_ISA64
 #define CONFIG_RVE
 #define CONFIG_DIFFTEST
+#define CONFIG_BATCH
 //#define CONFIG_ITRACE
 //#define CONFIG_WAVE
 //#define CONFIG_TIMER_GETTIMEOFDAY

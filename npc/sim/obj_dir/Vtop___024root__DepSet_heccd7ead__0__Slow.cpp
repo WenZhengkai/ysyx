@@ -88,6 +88,7 @@ VL_ATTR_COLD void Vtop___024root___dump_triggers__stl(Vtop___024root* vlSelf) {
 }
 #endif  // VL_DEBUG
 
+extern const VlUnpacked<CData/*7:0*/, 4> Vtop__ConstPool__TABLE_hf9b934a9_0;
 void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_datamem__DOT__npc_pmem_read_TOP(IData/*31:0*/ raddr, IData/*31:0*/ &rdata);
 void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_datamem__DOT__npc_pmem_write_TOP(IData/*31:0*/ waddr, IData/*31:0*/ wdata, CData/*7:0*/ wmask);
 void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_instmem__DOT__npc_nextPC_write_TOP(IData/*31:0*/ nextPC);
@@ -449,6 +450,16 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
            & (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__wbu_io_from_exu_bits_r_ctrl_rfWen));
     vlSelf->top__DOT__ToMem_Addr = (vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_data_fuSrc1 
                                     + vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_data_fuSrc2);
+    vlSelf->__Vtableidx1 = ((0xbU == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))
+                             ? 3U : ((0xaU == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))
+                                      ? 2U : ((9U == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))
+                                               ? 1U
+                                               : ((8U 
+                                                   == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))
+                                                   ? 0U
+                                                   : 2U))));
+    vlSelf->top__DOT__Wmask = Vtop__ConstPool__TABLE_hf9b934a9_0
+        [vlSelf->__Vtableidx1];
     vlSelf->pc = vlSelf->top__DOT__ysyx_core_rv32e__DOT__ifu__DOT__pc;
     vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu__DOT___GEN_13 
         = ((0xdU == (0xfU & (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_ctrl_rs1)))
@@ -681,21 +692,7 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
     vlSelf->top__DOT__ysyx_datamem__DOT__DPI_DataFromMem 
         = vlSelf->__Vtask_top__DOT__ysyx_datamem__DOT__npc_pmem_read__2__rdata;
     if (vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_MemWrite) {
-        Vtop___024root____Vdpiimwrap_top__DOT__ysyx_datamem__DOT__npc_pmem_write_TOP(vlSelf->top__DOT__ToMem_Addr, vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_data_rfSrc2, 
-                                                                                ((0xbU 
-                                                                                == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))
-                                                                                 ? 0xffU
-                                                                                 : 
-                                                                                ((0xaU 
-                                                                                == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))
-                                                                                 ? 0xfU
-                                                                                 : 
-                                                                                ((9U 
-                                                                                == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))
-                                                                                 ? 3U
-                                                                                 : 
-                                                                                (8U 
-                                                                                == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))))));
+        Vtop___024root____Vdpiimwrap_top__DOT__ysyx_datamem__DOT__npc_pmem_write_TOP(vlSelf->top__DOT__ToMem_Addr, vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_data_rfSrc2, (IData)(vlSelf->top__DOT__Wmask));
     }
     Vtop___024root____Vdpiimwrap_top__DOT__ysyx_instmem__DOT__npc_nextPC_write_TOP(vlSelf->pc);
     Vtop___024root____Vdpiimwrap_top__DOT__ysyx_instmem__DOT__npc_inst_read_TOP(vlSelf->pc, vlSelf->__Vtask_top__DOT__ysyx_instmem__DOT__npc_inst_read__0__rdata);
@@ -974,6 +971,7 @@ VL_ATTR_COLD void Vtop___024root___ctor_var_reset(Vtop___024root* vlSelf) {
     vlSelf->commit_next_pc = VL_RAND_RESET_I(32);
     vlSelf->commit_inst = VL_RAND_RESET_I(32);
     vlSelf->top__DOT__ToMem_Addr = VL_RAND_RESET_I(32);
+    vlSelf->top__DOT__Wmask = VL_RAND_RESET_I(8);
     vlSelf->top__DOT__ysyx_instmem__DOT__DPI_DataFromMem = VL_RAND_RESET_I(32);
     vlSelf->top__DOT__ysyx_datamem__DOT__DPI_DataFromMem = VL_RAND_RESET_I(32);
     vlSelf->top__DOT__ysyx_core_rv32e__DOT__ifu_io_to_idu_ready = VL_RAND_RESET_I(1);
@@ -1132,6 +1130,7 @@ VL_ATTR_COLD void Vtop___024root___ctor_var_reset(Vtop___024root* vlSelf) {
     }
     vlSelf->__Vtask_top__DOT__ysyx_instmem__DOT__npc_inst_read__0__rdata = 0;
     vlSelf->__Vtask_top__DOT__ysyx_datamem__DOT__npc_pmem_read__2__rdata = 0;
+    vlSelf->__Vtableidx1 = 0;
     vlSelf->__Vtrigrprev__TOP__clk = VL_RAND_RESET_I(1);
     for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;
