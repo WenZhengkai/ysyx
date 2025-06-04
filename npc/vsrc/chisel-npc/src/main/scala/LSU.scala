@@ -74,11 +74,17 @@ with HasNPCParameter {
     io.to_mem.data := io.data.rfSrc2
 
     io.to_mem.addr := io.in.bits.srca + io.in.bits.srcb
-    io.to_mem.Wmask := MuxLookup(io.ctrl.fuOpType, "b10".U, Array(
-        LSUOpType.sb    -> "b00".U,
-        LSUOpType.sh    -> "b01".U,
-        LSUOpType.sw    -> "b10".U,
-        LSUOpType.sd    -> "b11".U
+    // io.to_mem.Wmask := MuxLookup(io.ctrl.fuOpType, "b10".U, Array(
+    //     LSUOpType.sb    -> "b00".U,
+    //     LSUOpType.sh    -> "b01".U,
+    //     LSUOpType.sw    -> "b10".U,
+    //     LSUOpType.sd    -> "b11".U
+    // ))
+    io.to_mem.Wmask := MuxLookup(io.ctrl.fuOpType(1,0), "b10".U, Array(
+        "b00".U    -> "b00".U,      // byte
+        "b01".U    -> "b01".U,      // half
+        "b10".U    -> "b10".U,      // word
+        "b11".U    -> "b11".U       // double
     ))
 
     io.to_mem.MemWrite := io.ctrl.MemWrite

@@ -11,9 +11,7 @@ module LSU(
   input  [6:0]  io_ctrl_fuOpType,
   input  [31:0] io_data_rfSrc2
 );
-  wire [1:0] _io_to_mem_Wmask_T_1 = 7'h8 == io_ctrl_fuOpType ? 2'h0 : 2'h2; // @[Mux.scala 81:58]
-  wire [1:0] _io_to_mem_Wmask_T_3 = 7'h9 == io_ctrl_fuOpType ? 2'h1 : _io_to_mem_Wmask_T_1; // @[Mux.scala 81:58]
-  wire [1:0] _io_to_mem_Wmask_T_5 = 7'ha == io_ctrl_fuOpType ? 2'h2 : _io_to_mem_Wmask_T_3; // @[Mux.scala 81:58]
+  wire [1:0] _io_to_mem_Wmask_T_4 = 2'h2 == io_ctrl_fuOpType[1:0] ? 2'h2 : {{1'd0}, 2'h1 == io_ctrl_fuOpType[1:0]}; // @[Mux.scala 81:58]
   wire  io_out_bits_signBit = io_from_mem_data[7]; // @[EXU.scala 8:20]
   wire [23:0] _io_out_bits_T_2 = io_out_bits_signBit ? 24'hffffff : 24'h0; // @[Bitwise.scala 77:12]
   wire [31:0] _io_out_bits_T_3 = {_io_out_bits_T_2,io_from_mem_data[7:0]}; // @[Cat.scala 33:92]
@@ -28,8 +26,8 @@ module LSU(
   wire [31:0] _io_out_bits_T_23 = 7'h4 == io_ctrl_fuOpType ? _io_out_bits_T_11 : _io_out_bits_T_21; // @[Mux.scala 81:58]
   wire [31:0] _io_out_bits_T_25 = 7'h5 == io_ctrl_fuOpType ? _io_out_bits_T_13 : _io_out_bits_T_23; // @[Mux.scala 81:58]
   assign io_out_bits = 7'h6 == io_ctrl_fuOpType ? io_from_mem_data : _io_out_bits_T_25; // @[Mux.scala 81:58]
-  assign io_to_mem_data = io_data_rfSrc2; // @[LSU.scala 81:20]
-  assign io_to_mem_addr = io_in_bits_srca + io_in_bits_srcb; // @[LSU.scala 83:39]
-  assign io_to_mem_Wmask = 7'hb == io_ctrl_fuOpType ? 2'h3 : _io_to_mem_Wmask_T_5; // @[Mux.scala 81:58]
-  assign io_to_mem_MemWrite = io_ctrl_MemWrite; // @[LSU.scala 91:24]
+  assign io_to_mem_data = io_data_rfSrc2; // @[LSU.scala 74:20]
+  assign io_to_mem_addr = io_in_bits_srca + io_in_bits_srcb; // @[LSU.scala 76:39]
+  assign io_to_mem_Wmask = 2'h3 == io_ctrl_fuOpType[1:0] ? 2'h3 : _io_to_mem_Wmask_T_4; // @[Mux.scala 81:58]
+  assign io_to_mem_MemWrite = io_ctrl_MemWrite; // @[LSU.scala 90:24]
 endmodule

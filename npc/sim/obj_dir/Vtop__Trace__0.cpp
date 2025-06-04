@@ -28,16 +28,13 @@ void Vtop___024root__trace_chg_sub_0(Vtop___024root* vlSelf, VerilatedVcd::Buffe
         bufp->chgIData(oldp+1,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_data_rfSrc2),32);
         bufp->chgIData(oldp+2,(vlSelf->top__DOT__ysyx_datamem__DOT__DPI_DataFromMem),32);
         bufp->chgCData(oldp+3,(vlSelf->top__DOT__Wmask),8);
-        bufp->chgCData(oldp+4,(((0xbU == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))
-                                 ? 3U : ((0xaU == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))
-                                          ? 2U : ((9U 
-                                                   == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))
-                                                   ? 1U
-                                                   : 
-                                                  ((8U 
-                                                    == (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType))
-                                                    ? 0U
-                                                    : 2U))))),2);
+        bufp->chgCData(oldp+4,(((3U == (3U & (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType)))
+                                 ? 3U : ((2U == (3U 
+                                                 & (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType)))
+                                          ? 2U : (1U 
+                                                  == 
+                                                  (3U 
+                                                   & (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_fuOpType)))))),2);
         bufp->chgBit(oldp+5,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu_io_from_isu_bits_r_ctrl_MemWrite));
         bufp->chgBit(oldp+6,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__ifu_io_to_idu_ready));
         bufp->chgIData(oldp+7,(((IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__ifu_io_redirect_valid)
