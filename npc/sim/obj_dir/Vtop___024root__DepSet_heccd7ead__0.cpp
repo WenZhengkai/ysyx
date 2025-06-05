@@ -54,7 +54,7 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
     __Vdly__top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_14 = 0;
     CData/*1:0*/ __Vdly__top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_15;
     __Vdly__top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_15 = 0;
-    CData/*3:0*/ __Vdlyvdim0__top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x__v0;
+    CData/*4:0*/ __Vdlyvdim0__top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x__v0;
     __Vdlyvdim0__top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x__v0 = 0;
     IData/*31:0*/ __Vdlyvval__top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x__v0;
     __Vdlyvval__top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x__v0 = 0;
@@ -116,7 +116,7 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
                                  : 0U))));
         __Vdlyvset__top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x__v0 = 1U;
         __Vdlyvdim0__top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x__v0 
-            = (0xfU & (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__wbu_io_from_exu_bits_r_ctrl_rd));
+            = vlSelf->top__DOT__ysyx_core_rv32e__DOT__wbu_io_from_exu_bits_r_ctrl_rd;
     }
     if (vlSelf->top__DOT__ysyx_core_rv32e__DOT__valid_2) {
         vlSelf->top__DOT__ysyx_core_rv32e__DOT__wbu_io_from_exu_bits_r_data_csrRdata 
@@ -712,7 +712,7 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
                           - (IData)(1U))));
     vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_to_exu_bits_data_rfSrc1 
         = vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x
-        [(0xfU & (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_ctrl_rs1))];
+        [vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_ctrl_rs1];
     vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu__DOT___GEN_13 
         = ((0xdU == (0xfU & (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_ctrl_rs1)))
             ? (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu__DOT__busy_13)
@@ -812,7 +812,7 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
     vlSelf->commit_inst = vlSelf->top__DOT__ysyx_core_rv32e__DOT__io_commit_inst_REG;
     vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_to_exu_bits_data_rfSrc2 
         = vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x
-        [(0xfU & (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_ctrl_rs2))];
+        [vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_ctrl_rs2];
     if (vlSelf->rst) {
         vlSelf->top__DOT__ysyx_core_rv32e__DOT__valid_3 = 0U;
     } else if (vlSelf->top__DOT__ysyx_core_rv32e__DOT__valid_2) {

@@ -721,16 +721,32 @@ void Vtop___024root__trace_chg_sub_0(Vtop___024root* vlSelf, VerilatedVcd::Buffe
         bufp->chgIData(oldp+164,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[13]),32);
         bufp->chgIData(oldp+165,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[14]),32);
         bufp->chgIData(oldp+166,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[15]),32);
-        bufp->chgIData(oldp+167,(vlSelf->top__DOT__ysyx_instmem__DOT__DPI_DataFromMem),32);
+        bufp->chgIData(oldp+167,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[16]),32);
+        bufp->chgIData(oldp+168,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[17]),32);
+        bufp->chgIData(oldp+169,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[18]),32);
+        bufp->chgIData(oldp+170,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[19]),32);
+        bufp->chgIData(oldp+171,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[20]),32);
+        bufp->chgIData(oldp+172,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[21]),32);
+        bufp->chgIData(oldp+173,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[22]),32);
+        bufp->chgIData(oldp+174,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[23]),32);
+        bufp->chgIData(oldp+175,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[24]),32);
+        bufp->chgIData(oldp+176,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[25]),32);
+        bufp->chgIData(oldp+177,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[26]),32);
+        bufp->chgIData(oldp+178,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[27]),32);
+        bufp->chgIData(oldp+179,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[28]),32);
+        bufp->chgIData(oldp+180,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[29]),32);
+        bufp->chgIData(oldp+181,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[30]),32);
+        bufp->chgIData(oldp+182,(vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[31]),32);
+        bufp->chgIData(oldp+183,(vlSelf->top__DOT__ysyx_instmem__DOT__DPI_DataFromMem),32);
     }
-    bufp->chgBit(oldp+168,(vlSelf->clk));
-    bufp->chgBit(oldp+169,(vlSelf->rst));
-    bufp->chgIData(oldp+170,(vlSelf->inst),32);
-    bufp->chgIData(oldp+171,(vlSelf->pc),32);
-    bufp->chgBit(oldp+172,(vlSelf->commit_valid));
-    bufp->chgIData(oldp+173,(vlSelf->commit_pc),32);
-    bufp->chgIData(oldp+174,(vlSelf->commit_next_pc),32);
-    bufp->chgIData(oldp+175,(vlSelf->commit_inst),32);
+    bufp->chgBit(oldp+184,(vlSelf->clk));
+    bufp->chgBit(oldp+185,(vlSelf->rst));
+    bufp->chgIData(oldp+186,(vlSelf->inst),32);
+    bufp->chgIData(oldp+187,(vlSelf->pc),32);
+    bufp->chgBit(oldp+188,(vlSelf->commit_valid));
+    bufp->chgIData(oldp+189,(vlSelf->commit_pc),32);
+    bufp->chgIData(oldp+190,(vlSelf->commit_next_pc),32);
+    bufp->chgIData(oldp+191,(vlSelf->commit_inst),32);
 }
 
 void Vtop___024root__trace_cleanup(void* voidSelf, VerilatedVcd* /*unused*/) {

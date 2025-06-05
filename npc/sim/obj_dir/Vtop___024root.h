@@ -189,7 +189,7 @@ class Vtop___024root final : public VerilatedModule {
         IData/*31:0*/ __VactIterCount;
         QData/*32:0*/ top__DOT__ysyx_core_rv32e__DOT__exu__DOT__alu0__DOT__adderRes;
         QData/*32:0*/ top__DOT__ysyx_core_rv32e__DOT__exu__DOT__alu0__DOT__res;
-        VlUnpacked<IData/*31:0*/, 16> top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x;
+        VlUnpacked<IData/*31:0*/, 32> top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x;
         VlUnpacked<CData/*0:0*/, 2> __Vm_traceActivity;
     };
     VlTriggerVec<1> __VstlTriggered;

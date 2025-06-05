@@ -24,7 +24,7 @@ VL_ATTR_COLD void Vtop___024root___eval_initial(Vtop___024root* vlSelf) {
     vlSelf->__Vtrigrprev__TOP__clk = vlSelf->clk;
 }
 
-void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__set_gpr_ptr__Vdpioc2_TOP(const VlUnpacked<IData/*31:0*/, 16> &a);
+void Vtop___024root____Vdpiimwrap_top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__set_gpr_ptr__Vdpioc2_TOP(const VlUnpacked<IData/*31:0*/, 32> &a);
 
 VL_ATTR_COLD void Vtop___024root___eval_initial__TOP(Vtop___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
@@ -336,10 +336,10 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
         = vlSelf->top__DOT__ysyx_core_rv32e__DOT__valid_3;
     vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_to_exu_bits_data_rfSrc1 
         = vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x
-        [(0xfU & (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_ctrl_rs1))];
+        [vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_ctrl_rs1];
     vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_to_exu_bits_data_rfSrc2 
         = vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x
-        [(0xfU & (IData)(vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_ctrl_rs2))];
+        [vlSelf->top__DOT__ysyx_core_rv32e__DOT__isu_io_from_idu_bits_r_ctrl_rs2];
     if ((0x5063U == (0x707fU & vlSelf->top__DOT__ysyx_core_rv32e__DOT__idu_io_from_ifu_bits_r_inst))) {
         vlSelf->top__DOT__ysyx_core_rv32e__DOT__idu__DOT___decodelist_T_140 = 0U;
         vlSelf->top__DOT__ysyx_core_rv32e__DOT__idu__DOT___decodelist_T_181 = 0x15U;
@@ -1121,7 +1121,7 @@ VL_ATTR_COLD void Vtop___024root___ctor_var_reset(Vtop___024root* vlSelf) {
     vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu__DOT__csr0__DOT___csrUpdate_T_6 = VL_RAND_RESET_I(32);
     vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu__DOT__csr0__DOT__csrUpdate = VL_RAND_RESET_I(32);
     vlSelf->top__DOT__ysyx_core_rv32e__DOT__exu__DOT__csr0__DOT__csrWen = VL_RAND_RESET_I(1);
-    for (int __Vi0 = 0; __Vi0 < 16; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 32; ++__Vi0) {
         vlSelf->top__DOT__ysyx_core_rv32e__DOT__regfile__DOT__x[__Vi0] = VL_RAND_RESET_I(32);
     }
     vlSelf->__Vtask_top__DOT__ysyx_instmem__DOT__npc_inst_read__0__rdata = 0;

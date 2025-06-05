@@ -3,7 +3,7 @@ import chisel3.util._
 
 trait HasNPCParameter{
   val XLen = 32
-  val CONFIG_RVE = true     // Support Riscv E extension
+  val CONFIG_RVE = false     // Support Riscv E extension
   val NR_GPR = if(CONFIG_RVE) 16 else 32
   val IndependentBru = false
 
